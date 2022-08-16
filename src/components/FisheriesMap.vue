@@ -41,9 +41,8 @@ export default {
     });
     var center = [61.668562, -163.916567];
     this.map = L.map('map', {
-      zoom: 6,
       minZoom: 3,
-      maxZoom: 6,
+      maxZoom: 8,
       scrollWheelZoom: false,
       layers: [baseLayer],
     }).setView(center, 4);
