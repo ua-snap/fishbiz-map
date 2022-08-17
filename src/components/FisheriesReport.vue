@@ -1,16 +1,16 @@
 <template>
   <div class="report">
     <h1 class="title is-1">{{ selectedGroup }} in {{ selectedRegion }}</h1>
-    <div id="report" v-if="groupedFisheries[selectedRegion] != undefined">
+    <div id="report" v-if="filteredFisheries[selectedRegion] != undefined">
       <div
-        v-for="fishery in groupedFisheries[selectedRegion][selectedGroup]"
+        v-for="fishery in filteredFisheries[selectedRegion][selectedGroup]"
         :key="fishery"
       >
         <h3 class="title is-3" v-html="fishery['name']"></h3>
         <table>
           <tr>
             <td style="width: 200px">Access</td>
-            <td v-html="fishery['entry']"></td>
+            <td v-html="fishery['access']"></td>
           </tr>
           <tr>
             <td>Species</td>
@@ -69,7 +69,7 @@ export default {
   name: 'FisheriesReport',
   computed: {
     ...mapGetters({
-      groupedFisheries: 'groupedFisheries',
+      filteredFisheries: 'filteredFisheries',
       selectedRegion: 'selectedRegion',
       selectedGroup: 'selectedGroup',
     }),

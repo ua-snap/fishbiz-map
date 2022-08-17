@@ -4,12 +4,20 @@ import _ from 'lodash'
 export default createStore({
   state: {
     layer: undefined,
+    searchString: undefined,
     regions: undefined,
+    access: undefined,
+    species: undefined,
+    gear: undefined,
     fisheries: undefined,
     groupedFisheries: undefined,
     selectedRegion: undefined,
     selectedGroup: undefined,
     reportIsVisible: false,
+    regionOptions: undefined,
+    accessOptions: undefined,
+    speciesOptions: undefined,
+    gearOptions: undefined,
   },
 
   getters: {
@@ -22,6 +30,57 @@ export default createStore({
     groupedFisheries(state) {
       return state.groupedFisheries
     },
+    filteredFisheries(state) {
+      let filterKeys = ['region', 'access', 'species', 'gear']
+      let filtered = _.cloneDeep(state.groupedFisheries)
+
+      // Apply dropdown filters
+      let newFiltered = {}
+      filterKeys.forEach(filterKey => {
+        Object.keys(filtered).forEach(region => {
+          newFiltered[region] = {}
+          Object.keys(filtered[region]).forEach(group => {
+            newFiltered[region][group] = _.filter(
+              filtered[region][group],
+              fishery => {
+                if (
+                  _.includes([undefined, null, 'all'], state[filterKey]) ||
+                  fishery[filterKey] == state[filterKey]
+                ) {
+                  return true
+                }
+              }
+            )
+          })
+        })
+        filtered = _.cloneDeep(newFiltered)
+      })
+
+      // Perform text search if a search string was entered
+      if (state.searchString != undefined) {
+        newFiltered = {}
+        Object.keys(filtered).forEach(region => {
+          newFiltered[region] = {}
+          Object.keys(filtered[region]).forEach(group => {
+            newFiltered[region][group] = _.filter(
+              filtered[region][group],
+              fishery => {
+                let searchableText = ''
+                filterKeys.forEach(filterKey => {
+                  searchableText += fishery[filterKey]
+                })
+                searchableText = searchableText.toLowerCase()
+                let searchString = state.searchString.toLowerCase()
+                return searchableText.indexOf(searchString) != -1
+              }
+            )
+          })
+        })
+        filtered = _.cloneDeep(newFiltered)
+      }
+
+      return filtered
+    },
     selectedRegion(state) {
       return state.selectedRegion
     },
@@ -31,6 +90,33 @@ export default createStore({
     reportIsVisible(state) {
       return state.reportIsVisible
     },
+    regionOptions(state) {
+      return state.regionOptions
+    },
+    accessOptions(state) {
+      return state.accessOptions
+    },
+    speciesOptions(state) {
+      return state.speciesOptions
+    },
+    gearOptions(state) {
+      return state.gearOptions
+    },
+    searchString(state) {
+      return state.searchString
+    },
+    region(state) {
+      return state.region
+    },
+    access(state) {
+      return state.access
+    },
+    species(state) {
+      return state.species
+    },
+    gear(state) {
+      return state.gear
+    },
   },
 
   mutations: {
@@ -39,6 +125,18 @@ export default createStore({
     },
     setRegions(state, regions) {
       state.regions = regions
+    },
+    setRegionOptions(state, regionOptions) {
+      state.regionOptions = regionOptions
+    },
+    setAccessOptions(state, accessOptions) {
+      state.accessOptions = accessOptions
+    },
+    setSpeciesOptions(state, speciesOptions) {
+      state.speciesOptions = speciesOptions
+    },
+    setGearOptions(state, gearOptions) {
+      state.gearOptions = gearOptions
     },
     setFisheries(state, fisheries) {
       state.fisheries = fisheries
@@ -55,6 +153,21 @@ export default createStore({
       state.selectedRegion = undefined
       state.selectedGroup = undefined
       state.reportIsVisible = false
+    },
+    filterSearchString(state, searchString) {
+      state.searchString = searchString
+    },
+    filterRegion(state, region) {
+      state.region = region
+    },
+    filterAccess(state, access) {
+      state.access = access
+    },
+    filterSpecies(state, species) {
+      state.species = species
+    },
+    filterGear(state, gear) {
+      state.gear = gear
     },
   },
 
@@ -88,7 +201,61 @@ export default createStore({
         }
       })
 
+      let regionOptions = _.map(data, result => {
+        return {
+          slug: result['slug'],
+          name: result['name'],
+        }
+      })
+
       context.commit('setRegions', regions)
+      context.commit('setRegionOptions', regionOptions)
+    },
+    async fetchAccess(context) {
+      let response = await fetch(
+        process.env.VUE_APP_WORDPRESS_URL + '/wp-json/wp/v2/entry?per_page=100'
+      )
+
+      let data = await response.json()
+      let accessOptions = _.map(data, result => {
+        return {
+          slug: result['slug'],
+          name: result['name'],
+        }
+      })
+
+      context.commit('setAccessOptions', accessOptions)
+    },
+    async fetchSpecies(context) {
+      let response = await fetch(
+        process.env.VUE_APP_WORDPRESS_URL +
+          '/wp-json/wp/v2/species?per_page=100'
+      )
+
+      let data = await response.json()
+      let speciesOptions = _.map(data, result => {
+        return {
+          slug: result['slug'],
+          name: result['name'],
+        }
+      })
+
+      context.commit('setSpeciesOptions', speciesOptions)
+    },
+    async fetchGear(context) {
+      let response = await fetch(
+        process.env.VUE_APP_WORDPRESS_URL + '/wp-json/wp/v2/gear?per_page=100'
+      )
+
+      let data = await response.json()
+      let gearOptions = _.map(data, result => {
+        return {
+          slug: result['slug'],
+          name: result['name'],
+        }
+      })
+
+      context.commit('setGearOptions', gearOptions)
     },
     async fetchFisheries(context) {
       let pages = _.range(1, 3)
@@ -127,7 +294,7 @@ export default createStore({
 
         // TODO: Add some error checking here in case there are no array elements.
         let group = result['fishery_group'][0]['slug']
-        let entry = result['fishery_entry_type'][0]['slug']
+        let access = result['fishery_entry_type'][0]['slug']
         let species = result['fishery_species'][0]['slug']
         let gear = result['fishery_gear'][0]['slug']
 
@@ -144,7 +311,7 @@ export default createStore({
           seasons: joinedSeasons,
           group: group,
           species: species,
-          entry: entry,
+          access: access,
           gear: gear,
           code: code,
           link: link,

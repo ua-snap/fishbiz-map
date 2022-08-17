@@ -12,17 +12,20 @@ export default {
   name: 'App',
   components: {
     FisheriesMap,
-    FisheriesReport
+    FisheriesReport,
   },
   created() {
-    this.$store.dispatch("fetchRegions");
-    this.$store.dispatch("fetchFisheries");
+    this.$store.dispatch('fetchRegions')
+    this.$store.dispatch('fetchAccess')
+    this.$store.dispatch('fetchSpecies')
+    this.$store.dispatch('fetchGear')
+    this.$store.dispatch('fetchFisheries')
   },
   computed: {
     ...mapGetters({
       reportIsVisible: 'reportIsVisible',
     }),
-  }
+  },
 }
 </script>
 

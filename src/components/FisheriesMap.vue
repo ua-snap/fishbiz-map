@@ -1,13 +1,61 @@
 <template>
   <div>
+    <input
+      type="text"
+      class="filter"
+      placeholder="Search"
+      @input="textSearch"
+      v-model="enteredString"
+    />
+    <DropdownFilter
+      class="filter"
+      placeholder="Region"
+      :options="regionOptions"
+      mutation="filterRegion"
+      :value="region"
+    />
+    <DropdownFilter
+      class="filter"
+      placeholder="Access"
+      :options="accessOptions"
+      mutation="filterAccess"
+      :value="access"
+    />
+    <DropdownFilter
+      class="filter"
+      placeholder="Species"
+      :options="speciesOptions"
+      mutation="filterSpecies"
+      :value="species"
+    />
+    <DropdownFilter
+      class="filter"
+      placeholder="Gear"
+      :options="gearOptions"
+      mutation="filterGear"
+      :value="gear"
+    />
     <div id="map"></div>
   </div>
 </template>
 
 <style lang="scss" scoped>
+.filter {
+  width: 18%;
+  display: inline-block;
+  --vs-search-input-placeholder-color: #757575;
+}
+input.filter {
+  border: var(--vs-border-width) var(--vs-border-style) var(--vs-border-color);
+  font-size: var(--vs-font-size);
+  border-radius: 3px;
+  padding: 7px;
+}
 #map {
-  height: 100vh;
+  height: 95.75vh;
   width: 100vw;
+  position: absolute;
+  bottom: 0;
 }
 </style>
 
@@ -17,19 +65,35 @@ import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { mapGetters } from 'vuex'
 
+import DropdownFilter from './DropdownFilter.vue'
+
 export default {
   name: 'FisheriesMap',
+  components: {
+    DropdownFilter,
+  },
   data() {
     return {
       map: undefined,
       markers: {},
+      markerLayerGroup: undefined,
+      enteredString: undefined,
     }
   },
   computed: {
     ...mapGetters({
-      groupedFisheries: 'groupedFisheries',
+      filteredFisheries: 'filteredFisheries',
       regions: 'regions',
       reportIsVisible: 'reportIsVisible',
+      regionOptions: 'regionOptions',
+      accessOptions: 'accessOptions',
+      speciesOptions: 'speciesOptions',
+      gearOptions: 'gearOptions',
+      searchString: 'searchString',
+      region: 'region',
+      access: 'access',
+      species: 'species',
+      gear: 'gear',
     }),
   },
   mounted() {
@@ -56,9 +120,30 @@ export default {
       this.addMarkers()
     })
   },
+  watch: {
+    searchString() {
+      this.addMarkers()
+    },
+    region() {
+      this.addMarkers()
+    },
+    access() {
+      this.addMarkers()
+    },
+    species() {
+      this.addMarkers()
+    },
+    gear() {
+      this.addMarkers()
+    },
+  },
   methods: {
     addMarkers: function () {
-      Object.keys(this.groupedFisheries).forEach(region => {
+      if (this.markerLayerGroup != undefined) {
+        this.markerLayerGroup.clearLayers()
+      }
+      let markers = []
+      Object.keys(this.filteredFisheries).forEach(region => {
         let regionLat = parseFloat(this.regions[region]['lat'])
         let regionLon = parseFloat(this.regions[region]['lon'])
 
@@ -66,24 +151,23 @@ export default {
           regionLon -= 360
         }
 
-        Object.keys(this.groupedFisheries[region]).forEach(group => {
-          let lat = regionLat + _.random(-0.75, 0.75, true)
-          let lon = regionLon + _.random(-0.75, 0.75, true)
-          let icon = L.icon({
-            iconUrl: require(`../assets/images/icons/${group}.png`),
-            iconSize: [35, 35],
-          })
-          let marker = L.marker([lat, lon], { icon: icon })
-          marker.on('click', () => {
-            this.handleMapClick(region, group)
-          })
-          marker.addTo(this.map)
-          if (!_.has(this.markers, region)) {
-            this.markers[region] = {}
+        Object.keys(this.filteredFisheries[region]).forEach(group => {
+          if (this.filteredFisheries[region][group].length > 0) {
+            let lat = regionLat + _.random(-0.75, 0.75, true)
+            let lon = regionLon + _.random(-0.75, 0.75, true)
+            let icon = L.icon({
+              iconUrl: require(`../assets/images/icons/${group}.png`),
+              iconSize: [35, 35],
+            })
+            let marker = L.marker([lat, lon], { icon: icon })
+            marker.on('click', () => {
+              this.handleMapClick(region, group)
+            })
+            markers.push(marker)
           }
-          this.markers[region][group] = marker
         })
       })
+      this.markerLayerGroup = L.layerGroup(markers).addTo(this.map)
     },
     handleMapClick: function (region, group) {
       this.$store.commit('markerClicked', {
@@ -91,6 +175,9 @@ export default {
         group: group,
       })
     },
+    textSearch: _.debounce(function () {
+      this.$store.commit('filterSearchString', this.enteredString)
+    }, 1000),
   },
   unmounted() {
     this.map.remove()
