@@ -1,48 +1,67 @@
 <template>
-  <div>
-    <input
-      type="text"
-      class="filter"
-      placeholder="Search"
-      @input="textSearch"
-      v-model="enteredString"
-    />
-    <DropdownFilter
-      class="filter"
-      placeholder="Region"
-      :options="regionOptions"
-      mutation="filterRegion"
-      :value="region"
-    />
-    <DropdownFilter
-      class="filter"
-      placeholder="Access"
-      :options="accessOptions"
-      mutation="filterAccess"
-      :value="access"
-    />
-    <DropdownFilter
-      class="filter"
-      placeholder="Species"
-      :options="speciesOptions"
-      mutation="filterSpecies"
-      :value="species"
-    />
-    <DropdownFilter
-      class="filter"
-      placeholder="Gear"
-      :options="gearOptions"
-      mutation="filterGear"
-      :value="gear"
-    />
-    <div id="map"></div>
+  <div class="app-wrapper">
+    <div class="filters">
+      <input
+        type="text"
+        class="filter"
+        placeholder="Search"
+        @input="textSearch"
+        v-model="enteredString"
+      />
+      <DropdownFilter
+        class="filter"
+        placeholder="Region"
+        :options="regionOptions"
+        mutation="filterRegion"
+        :value="region"
+      />
+      <DropdownFilter
+        class="filter"
+        placeholder="Access"
+        :options="accessOptions"
+        mutation="filterAccess"
+        :value="access"
+      />
+      <DropdownFilter
+        class="filter"
+        placeholder="Species"
+        :options="speciesOptions"
+        mutation="filterSpecies"
+        :value="species"
+      />
+      <DropdownFilter
+        class="filter"
+        placeholder="Gear"
+        :options="gearOptions"
+        mutation="filterGear"
+        :value="gear"
+      />
+    </div>
+    <div class="map-wrapper">
+      &nbsp;
+      <div id="map"></div>
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
+.app-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+.map-wrapper {
+  position: relative;
+  height: 100%;
+}
+.filters {
+  display: flex;
+  @media (max-width: 1000px) {
+    flex-direction: column;
+  }
+}
 .filter {
-  width: 18%;
-  display: inline-block;
+  flex-basis: 20%;
   --vs-search-input-placeholder-color: #757575;
 }
 input.filter {
@@ -52,10 +71,10 @@ input.filter {
   padding: 7px;
 }
 #map {
-  height: 95.75vh;
-  width: 100vw;
   position: absolute;
+  top: 0;
   bottom: 0;
+  width: 100%;
 }
 </style>
 
