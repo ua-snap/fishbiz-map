@@ -1,6 +1,14 @@
 import { createStore } from 'vuex'
 import _ from 'lodash'
 
+function dictifyOptions(options) {
+  let dict = {}
+  options.forEach(option => {
+    dict[option.slug] = option.name
+  })
+  return dict
+}
+
 export default createStore({
   state: {
     layer: undefined,
@@ -18,6 +26,8 @@ export default createStore({
     accessOptions: undefined,
     speciesOptions: undefined,
     gearOptions: undefined,
+    seasonDict: undefined,
+    groupDict: undefined,
   },
 
   getters: {
@@ -90,17 +100,35 @@ export default createStore({
     reportIsVisible(state) {
       return state.reportIsVisible
     },
+    regionDict(state) {
+      return dictifyOptions(state.regionOptions)
+    },
     regionOptions(state) {
       return state.regionOptions
+    },
+    accessDict(state) {
+      return dictifyOptions(state.accessOptions)
     },
     accessOptions(state) {
       return state.accessOptions
     },
+    speciesDict(state) {
+      return dictifyOptions(state.speciesOptions)
+    },
     speciesOptions(state) {
       return state.speciesOptions
     },
+    gearDict(state) {
+      return dictifyOptions(state.gearOptions)
+    },
     gearOptions(state) {
       return state.gearOptions
+    },
+    seasonDict(state) {
+      return state.seasonDict
+    },
+    groupDict(state) {
+      return state.groupDict
     },
     searchString(state) {
       return state.searchString
@@ -137,6 +165,12 @@ export default createStore({
     },
     setGearOptions(state, gearOptions) {
       state.gearOptions = gearOptions
+    },
+    setSeasonDict(state, seasonDict) {
+      state.seasonDict = seasonDict
+    },
+    setGroupDict(state, groupDict) {
+      state.groupDict = groupDict
     },
     setFisheries(state, fisheries) {
       state.fisheries = fisheries
@@ -257,6 +291,35 @@ export default createStore({
 
       context.commit('setGearOptions', gearOptions)
     },
+    async fetchSeasons(context) {
+      let response = await fetch(
+        process.env.VUE_APP_WORDPRESS_URL + '/wp-json/wp/v2/season?per_page=100'
+      )
+
+      let data = await response.json()
+
+      let seasonDict = {}
+      data.forEach(result => {
+        seasonDict[result['slug']] = result['name']
+      })
+
+      context.commit('setSeasonDict', seasonDict)
+    },
+    async fetchGroups(context) {
+      let response = await fetch(
+        process.env.VUE_APP_WORDPRESS_URL +
+          '/wp-json/wp/v2/fish_group?per_page=100'
+      )
+
+      let data = await response.json()
+
+      let groupDict = {}
+      data.forEach(result => {
+        groupDict[result['slug']] = result['name']
+      })
+
+      context.commit('setGroupDict', groupDict)
+    },
     async fetchFisheries(context) {
       let pages = _.range(1, 3)
       let urls = _.map(pages, page => {
@@ -290,25 +353,23 @@ export default createStore({
           return region['slug']
         })
 
-        let joinedRegions = regions.join(', ')
-
         // TODO: Add some error checking here in case there are no array elements.
         let group = result['fishery_group'][0]['slug']
         let access = result['fishery_entry_type'][0]['slug']
         let species = result['fishery_species'][0]['slug']
         let gear = result['fishery_gear'][0]['slug']
 
-        let joinedSeasons = _.map(result['fishery_seasons'], season => {
+        let seasons = _.map(result['fishery_seasons'], season => {
           return season['slug']
-        }).join(', ')
+        })
 
         let code = result['fishery_code']
         let link = result['link_to_resource']
 
         let fishery = {
           name: name,
-          region: joinedRegions,
-          seasons: joinedSeasons,
+          region: regions,
+          seasons: seasons,
           group: group,
           species: species,
           access: access,
