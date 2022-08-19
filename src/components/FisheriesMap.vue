@@ -1,5 +1,5 @@
 <template>
-  <div class="app-wrapper">
+  <div class="app-contents">
     <div class="filters">
       <input
         type="text"
@@ -45,10 +45,10 @@
 </template>
 
 <style lang="scss" scoped>
-.app-wrapper {
+.app-contents {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100%;
 }
 .map-wrapper {
   position: relative;
