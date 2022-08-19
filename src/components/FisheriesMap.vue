@@ -132,6 +132,8 @@ export default {
       scrollWheelZoom: false,
       layers: [baseLayer],
     }).setView(center, 4)
+
+    this.enteredString = this.searchString
   },
   created() {
     this.$store.dispatch('fetchRegions')
