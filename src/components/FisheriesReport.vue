@@ -2,6 +2,7 @@
   <div class="report">
     <h1>{{ selectedGroup }} in {{ selectedRegion }}</h1>
     <div id="report" v-if="groupedFisheries[selectedRegion] != undefined">
+      <button @click="reset">Back to map</button>
       <div
         v-for="fishery in groupedFisheries[selectedRegion][selectedGroup]"
         :key="fishery"
@@ -42,13 +43,17 @@
         <hr />
       </div>
     </div>
-    <div><button @click="reset">Back to map</button></div>
+    <button @click="reset">Back to map</button>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .report {
   margin: 0 2em;
+  text-align: left;
+}
+button {
+  margin-bottom: 1rem;
 }
 h1,
 h3 {
