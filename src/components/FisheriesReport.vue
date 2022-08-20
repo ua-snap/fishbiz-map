@@ -1,12 +1,12 @@
 <template>
   <div class="report">
-    <h1 class="title is-1">{{ selectedGroup }} in {{ selectedRegion }}</h1>
+    <h1>{{ selectedGroup }} in {{ selectedRegion }}</h1>
     <div id="report" v-if="groupedFisheries[selectedRegion] != undefined">
       <div
         v-for="fishery in groupedFisheries[selectedRegion][selectedGroup]"
         :key="fishery"
       >
-        <h3 class="title is-3" v-html="fishery['name']"></h3>
+        <h3 v-html="fishery['name']"></h3>
         <table>
           <tr>
             <td style="width: 200px">Access</td>
