@@ -44,11 +44,11 @@ export default {
     )
     var center = [61.668562, -163.916567]
     this.map = L.map('map', {
-      minZoom: 3,
+      minZoom: 4.5,
       maxZoom: 8,
       scrollWheelZoom: false,
       layers: [baseLayer],
-    }).setView(center, 4)
+    }).setView(center, 4.5)
   },
   created() {
     this.$store.dispatch('fetchRegions')
@@ -58,6 +58,15 @@ export default {
   },
   methods: {
     addMarkers: function () {
+      let spread = 1.2
+      let jitterOffsets = {
+        finfish: { lat: 0, lon: 0 },
+        'ground-fish': { lat: 0, lon: spread },
+        crab: { lat: spread, lon: 0 },
+        shrimp: { lat: 0, lon: -spread },
+        'other-species': { lat: -spread, lon: 0 },
+      }
+
       Object.keys(this.groupedFisheries).forEach(region => {
         let regionLat = parseFloat(this.regions[region]['lat'])
         let regionLon = parseFloat(this.regions[region]['lon'])
@@ -67,8 +76,17 @@ export default {
         }
 
         Object.keys(this.groupedFisheries[region]).forEach(group => {
-          let lat = regionLat + _.random(-0.75, 0.75, true)
-          let lon = regionLon + _.random(-0.75, 0.75, true)
+          // The weird math here is to deal with more northern latitudes being
+          // slightly further apart. Marker icons appear equally offset from each
+          // other using the math below.
+          let latJitter =
+            (65 / (Math.pow(regionLat, 1.475) * 1.5)) *
+            jitterOffsets[group]['lat'] *
+            5
+          let lonJitter = jitterOffsets[group]['lon']
+
+          let lat = regionLat + latJitter
+          let lon = regionLon + lonJitter
           let icon = L.icon({
             iconUrl: require(`../assets/images/icons/${group}.png`),
             iconSize: [35, 35],
