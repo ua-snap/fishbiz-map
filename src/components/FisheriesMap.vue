@@ -136,7 +136,12 @@ export default {
     this.enteredString = this.searchString
   },
   created() {
+    this.$store.dispatch('fetchAccess')
+    this.$store.dispatch('fetchSpecies')
+    this.$store.dispatch('fetchGear')
+    this.$store.dispatch('fetchSeasons')
     this.$store.dispatch('fetchRegions')
+    this.$store.dispatch('fetchGroups')
     this.$store.dispatch('fetchFisheries').then(() => {
       this.addMarkers()
     })

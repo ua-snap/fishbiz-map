@@ -1,6 +1,8 @@
 <template>
   <div class="report">
-    <h1 class="title is-1">{{ selectedGroup }} in {{ selectedRegion }}</h1>
+    <h1 class="title is-1">
+      {{ groupDict[selectedGroup] }} in {{ regionDict[selectedRegion] }}
+    </h1>
     <div id="report" v-if="filteredFisheries[selectedRegion] != undefined">
       <div
         v-for="fishery in filteredFisheries[selectedRegion][selectedGroup]"
@@ -9,33 +11,35 @@
         <h3 v-html="fishery['name']"></h3>
         <table>
           <tr>
-            <td style="width: 200px">Access</td>
-            <td v-html="fishery['access']"></td>
+            <td class="label">Access</td>
+            <td v-html="accessDict[fishery['access']]"></td>
           </tr>
           <tr>
-            <td>Species</td>
-            <td v-html="fishery['species']"></td>
+            <td class="label">Species</td>
+            <td v-html="speciesDict[fishery['species']]"></td>
           </tr>
           <tr>
-            <td>Gear</td>
-            <td v-html="fishery['gear']"></td>
+            <td class="label">Gear</td>
+            <td v-html="gearDict[fishery['gear']]"></td>
           </tr>
           <tr>
-            <td>Region</td>
-            <td v-html="fishery['region']"></td>
+            <td class="label">Region</td>
+            <td v-html="joined(fishery['region'], regionDict)"></td>
           </tr>
           <tr>
-            <td>CFEC code</td>
+            <td class="label">CFEC code</td>
             <td v-html="fishery['code']"></td>
           </tr>
           <tr>
-            <td>Seasons</td>
-            <td v-html="fishery['seasons']"></td>
+            <td class="label">Seasons</td>
+            <td v-html="joined(fishery['seasons'], seasonDict)"></td>
           </tr>
           <tr>
-            <td>Link</td>
+            <td class="label">Link</td>
             <td>
-              <a :href="fishery['link']">{{ fishery['link'] }}</a>
+              <a :href="fishery['link']"
+                >See more information about this fishery</a
+              >
             </td>
           </tr>
         </table>
@@ -64,9 +68,13 @@ hr {
 td {
   text-align: left;
 }
+.label {
+  width: 150px;
+}
 </style>
 
 <script>
+import _ from 'lodash'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -76,11 +84,20 @@ export default {
       filteredFisheries: 'filteredFisheries',
       selectedRegion: 'selectedRegion',
       selectedGroup: 'selectedGroup',
+      accessDict: 'accessDict',
+      speciesDict: 'speciesDict',
+      gearDict: 'gearDict',
+      regionDict: 'regionDict',
+      seasonDict: 'seasonDict',
+      groupDict: 'groupDict',
     }),
   },
   methods: {
     reset: function () {
       this.$store.commit('closeReport')
+    },
+    joined: function (array, dict) {
+      return _.map(array, key => dict[key]).join(', ')
     },
   },
 }

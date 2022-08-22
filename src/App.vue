@@ -14,13 +14,7 @@ export default {
     FisheriesMap,
     FisheriesReport,
   },
-  created() {
-    this.$store.dispatch('fetchRegions')
-    this.$store.dispatch('fetchAccess')
-    this.$store.dispatch('fetchSpecies')
-    this.$store.dispatch('fetchGear')
-    this.$store.dispatch('fetchFisheries')
-  },
+  created() {},
   computed: {
     ...mapGetters({
       reportIsVisible: 'reportIsVisible',
