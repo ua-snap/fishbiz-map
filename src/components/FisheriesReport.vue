@@ -6,7 +6,7 @@
         v-for="fishery in filteredFisheries[selectedRegion][selectedGroup]"
         :key="fishery"
       >
-        <h3 class="title is-3" v-html="fishery['name']"></h3>
+        <h3 v-html="fishery['name']"></h3>
         <table>
           <tr>
             <td style="width: 200px">Access</td>
@@ -42,13 +42,17 @@
         <hr />
       </div>
     </div>
-    <div><button @click="reset">Back to map</button></div>
+    <button @click="reset">Back to map</button>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .report {
   margin: 0 2em;
+  text-align: left;
+}
+button {
+  margin-bottom: 1rem;
 }
 h1,
 h3 {
