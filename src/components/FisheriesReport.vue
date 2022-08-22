@@ -1,8 +1,7 @@
 <template>
   <div class="report">
-    <h1 class="title is-1">
-      {{ groupDict[selectedGroup] }} in {{ regionDict[selectedRegion] }}
-    </h1>
+    <h1>{{ groupDict[selectedGroup] }} in {{ regionDict[selectedRegion] }}</h1>
+    <button @click="reset">Back to map</button>
     <div id="report" v-if="filteredFisheries[selectedRegion] != undefined">
       <div
         v-for="fishery in filteredFisheries[selectedRegion][selectedGroup]"
