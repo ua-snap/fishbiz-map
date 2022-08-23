@@ -3,10 +3,7 @@
     <h1>{{ groupDict[selectedGroup] }} in {{ regionDict[selectedRegion] }}</h1>
     <button @click="reset">Back to map</button>
     <div id="report" v-if="filteredFisheries[selectedRegion] != undefined">
-      <div
-        v-for="fishery in filteredFisheries[selectedRegion][selectedGroup]"
-        :key="fishery"
-      >
+      <div v-for="fishery in orderedResults()" :key="fishery">
         <h3 v-html="fishery['name']"></h3>
         <table>
           <tr>
@@ -99,6 +96,12 @@ export default {
     },
     joined: function (array, dict) {
       return _.map(array, key => dict[key]).join(', ')
+    },
+    orderedResults: function () {
+      return _.orderBy(
+        this.filteredFisheries[this.selectedRegion][this.selectedGroup],
+        'name'
+      )
     },
   },
 }
