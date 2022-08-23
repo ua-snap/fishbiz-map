@@ -125,13 +125,13 @@ export default {
         attribution: 'USGS',
       }
     )
-    var center = [61.668562, -163.916567]
     this.map = L.map('map', {
-      minZoom: 4.5,
+      minZoom: 4,
       maxZoom: 8,
+      zoomSnap: 0.1,
       scrollWheelZoom: false,
       layers: [baseLayer],
-    }).setView(center, 4.5)
+    })
 
     this.enteredString = this.searchString
   },
@@ -165,11 +165,11 @@ export default {
   },
   methods: {
     addMarkers: function () {
-      if (this.markerLayerGroup != undefined) {
-        this.markerLayerGroup.clearLayers()
+      if (this.markerFeatureGroup != undefined) {
+        this.markerFeatureGroup.clearLayers()
       }
       let markers = []
-      let spread = 1.2
+      let spread = 1.5
       let jitterOffsets = {
         finfish: { lat: 0, lon: 0 },
         'ground-fish': { lat: 0, lon: spread },
@@ -211,7 +211,8 @@ export default {
           }
         })
       })
-      this.markerLayerGroup = L.layerGroup(markers).addTo(this.map)
+      this.markerFeatureGroup = L.featureGroup(markers).addTo(this.map)
+      this.map.fitBounds(this.markerFeatureGroup.getBounds().pad(0.05))
     },
     handleMapClick: function (region, group) {
       this.$store.commit('markerClicked', {
