@@ -222,17 +222,8 @@ export default createStore({
           name: name,
         }
 
-        if (result['latitude'] != '') {
-          regions[slug]['lat'] = result['latitude']
-        } else {
-          regions[slug]['lat'] = _.random(50, 70, true)
-        }
-
-        if (result['longitude'] != '') {
-          regions[slug]['lon'] = result['longitude']
-        } else {
-          regions[slug]['lon'] = _.random(-180, -150, true)
-        }
+        regions[slug]['lat'] = result['latitude']
+        regions[slug]['lon'] = result['longitude']
       })
 
       let regionOptions = _.map(data, result => {
