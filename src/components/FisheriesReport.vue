@@ -51,7 +51,7 @@
 
 <style lang="scss" scoped>
 .report {
-  margin: 0 2em;
+  margin: 0 2rem;
   text-align: left;
 }
 button {
@@ -62,7 +62,7 @@ h3 {
   text-align: left;
 }
 hr {
-  margin: 40px 0;
+  margin: 2rem 0;
 }
 td {
   text-align: left;
