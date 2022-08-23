@@ -53,6 +53,8 @@
 .report {
   margin: 0 2rem;
   text-align: left;
+  max-height: 750px;
+  overflow-y: auto;
 }
 button {
   margin-bottom: 1rem;
