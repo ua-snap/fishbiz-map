@@ -97,6 +97,7 @@ export default {
       markers: {},
       markerLayerGroup: undefined,
       enteredString: undefined,
+      markerBounds: undefined,
     }
   },
   computed: {
@@ -212,7 +213,10 @@ export default {
         })
       })
       this.markerFeatureGroup = L.featureGroup(markers).addTo(this.map)
-      this.map.fitBounds(this.markerFeatureGroup.getBounds().pad(0.05))
+      if (this.markerBounds == undefined) {
+        this.markerBounds = this.markerFeatureGroup.getBounds().pad(0.05)
+        this.map.fitBounds(this.markerBounds)
+      }
     },
     handleMapClick: function (region, group) {
       this.$store.commit('markerClicked', {

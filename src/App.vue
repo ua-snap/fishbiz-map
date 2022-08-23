@@ -35,9 +35,4 @@ export default {
 body {
   margin: 0;
 }
-.container:not(.is-max-desktop):not(.is-max-widescreen) {
-  max-width: 100% !important;
-  width: 100% !important;
-  padding: 0;
-}
 </style>
