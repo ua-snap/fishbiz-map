@@ -68,7 +68,7 @@ td {
   text-align: left;
 }
 .label {
-  width: 150px;
+  width: 10rem;
 }
 </style>
 
