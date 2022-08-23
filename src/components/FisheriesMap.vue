@@ -229,6 +229,7 @@ export default {
     }, 1000),
   },
   unmounted() {
+    this.markerBounds = undefined
     this.map.remove()
     this.$store.commit('destroy')
   },
