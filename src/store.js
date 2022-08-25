@@ -28,6 +28,7 @@ export default createStore({
     gearOptions: undefined,
     seasonDict: undefined,
     groupDict: undefined,
+    markerBounds: undefined,
   },
 
   getters: {
@@ -145,6 +146,9 @@ export default createStore({
     gear(state) {
       return state.gear
     },
+    markerBounds(state) {
+      return state.markerBounds
+    },
   },
 
   mutations: {
@@ -202,6 +206,9 @@ export default createStore({
     },
     filterGear(state, gear) {
       state.gear = gear
+    },
+    setMarkerBounds(state, markerBounds) {
+      state.markerBounds = markerBounds
     },
   },
 

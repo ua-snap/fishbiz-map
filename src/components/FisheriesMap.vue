@@ -97,7 +97,6 @@ export default {
       markers: {},
       markerLayerGroup: undefined,
       enteredString: undefined,
-      markerBounds: undefined,
     }
   },
   computed: {
@@ -114,6 +113,7 @@ export default {
       access: 'access',
       species: 'species',
       gear: 'gear',
+      markerBounds: 'markerBounds',
     }),
   },
   mounted() {
@@ -161,6 +161,9 @@ export default {
       this.addMarkers()
     },
     gear() {
+      this.addMarkers()
+    },
+    markerBounds() {
       this.addMarkers()
     },
   },
@@ -214,7 +217,9 @@ export default {
       })
       this.markerFeatureGroup = L.featureGroup(markers).addTo(this.map)
       if (this.markerBounds == undefined) {
-        this.markerBounds = this.markerFeatureGroup.getBounds().pad(0.05)
+        let markerBounds = this.markerFeatureGroup.getBounds().pad(0.05)
+        this.$store.commit('setMarkerBounds', markerBounds)
+      } else {
         this.map.fitBounds(this.markerBounds)
       }
     },
@@ -229,7 +234,6 @@ export default {
     }, 1000),
   },
   unmounted() {
-    this.markerBounds = undefined
     this.map.remove()
     this.$store.commit('destroy')
   },
