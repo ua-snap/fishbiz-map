@@ -46,7 +46,6 @@
 </template>
 
 <style lang="scss" scoped>
-@import '~/node_modules/picnic/picnic.min.css';
 .report {
   margin: 0 2rem;
   text-align: left;
@@ -54,10 +53,39 @@
   overflow-y: auto;
 }
 button {
-  margin-bottom: 1rem;
+  margin: 0 0 1rem 0;
+  padding: 0.4em 0.8em;
+  background: #0074d9;
+  color: #fff;
+  border: 0;
+  border-radius: 0.2em;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 1.1rem;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+
+  &:hover {
+    box-shadow: inset 0 0 0 99em rgba(255, 255, 255, 0.2);
+    border: 0;
+  }
 }
 table {
   margin-bottom: 2rem;
+}
+tr:nth-child(even) {
+  background: rgba(17, 17, 17, 0.05);
+}
+td {
+  padding: 0.3em 2.4em 0.3em 0.6em;
+  font-size: 1.1rem;
+  a:hover {
+    text-decoration: underline;
+  }
 }
 </style>
 
