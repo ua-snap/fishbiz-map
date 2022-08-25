@@ -83,8 +83,12 @@ tr:nth-child(even) {
 td {
   padding: 0.3em 2.4em 0.3em 0.6em;
   font-size: 1.1rem;
-  a:hover {
-    text-decoration: underline;
+
+  a {
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
   }
 }
 </style>
