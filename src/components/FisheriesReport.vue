@@ -7,31 +7,31 @@
         <h3 v-html="fishery['name']"></h3>
         <table>
           <tr>
-            <td class="label">Access</td>
+            <td>Access</td>
             <td v-html="accessDict[fishery['access']]"></td>
           </tr>
           <tr>
-            <td class="label">Species</td>
+            <td>Species</td>
             <td v-html="speciesDict[fishery['species']]"></td>
           </tr>
           <tr>
-            <td class="label">Gear</td>
+            <td>Gear</td>
             <td v-html="gearDict[fishery['gear']]"></td>
           </tr>
           <tr>
-            <td class="label">Region</td>
+            <td>Region</td>
             <td v-html="joined(fishery['region'], regionDict)"></td>
           </tr>
           <tr>
-            <td class="label">CFEC code</td>
+            <td>CFEC code</td>
             <td v-html="fishery['code']"></td>
           </tr>
           <tr>
-            <td class="label">Seasons</td>
+            <td>Seasons</td>
             <td v-html="joined(fishery['seasons'], seasonDict)"></td>
           </tr>
           <tr>
-            <td class="label">Link</td>
+            <td>Link</td>
             <td>
               <a :href="fishery['link']"
                 >See more information about this fishery</a
@@ -39,7 +39,6 @@
             </td>
           </tr>
         </table>
-        <hr />
       </div>
     </div>
     <button @click="reset">Back to map</button>
@@ -47,6 +46,7 @@
 </template>
 
 <style lang="scss" scoped>
+@import '~/node_modules/picnic/picnic.min.css';
 .report {
   margin: 0 2rem;
   text-align: left;
@@ -56,18 +56,8 @@
 button {
   margin-bottom: 1rem;
 }
-h1,
-h3 {
-  text-align: left;
-}
-hr {
-  margin: 2rem 0;
-}
-td {
-  text-align: left;
-}
-.label {
-  width: 10rem;
+table {
+  margin-bottom: 2rem;
 }
 </style>
 
