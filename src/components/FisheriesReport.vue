@@ -51,6 +51,7 @@
   text-align: left;
   max-height: 750px;
   overflow-y: auto;
+  font-size: 1.6rem;
 }
 button {
   margin: 0 0 1rem 0;
@@ -61,7 +62,6 @@ button {
   border-radius: 0.2em;
   cursor: pointer;
   transition: all 0.3s;
-  font-size: 1.1rem;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   font-weight: 400;
   -webkit-touch-callout: none;
@@ -82,7 +82,6 @@ tr:nth-child(even) {
 }
 td {
   padding: 0.3em 2.4em 0.3em 0.6em;
-  font-size: 1.1rem;
 
   a {
     text-decoration: none;
