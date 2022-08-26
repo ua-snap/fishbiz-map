@@ -227,6 +227,7 @@ export default {
         this.$store.commit('setMarkerBounds', markerBounds)
       } else {
         this.map.fitBounds(this.markerBounds)
+        this.map.setMinZoom(this.map.getZoom())
       }
     },
     handleMapClick: function (region, group) {
