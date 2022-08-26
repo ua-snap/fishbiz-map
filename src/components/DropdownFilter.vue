@@ -53,6 +53,9 @@ export default {
       selection: this.selected,
     }
   },
+  created() {
+    this.selection = this.value
+  },
   update() {
     this.selection = this.value
   },
