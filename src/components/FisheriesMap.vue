@@ -42,6 +42,14 @@
       &nbsp;
       <div id="map"></div>
     </div>
+    <div class="legend">
+      <div v-for="group in groupOptions" :key="group">
+        <img
+          :src="require('@/assets/images/icons/' + group['slug'] + '.png')"
+        />
+        <br />{{ group['name'] }}
+      </div>
+    </div>
   </div>
 </template>
 
@@ -82,6 +90,18 @@ input.filter {
   width: 100%;
   z-index: 500;
 }
+.legend {
+  display: flex;
+  margin: 2rem 0;
+  div {
+    flex-grow: 1;
+    img {
+      width: 35px;
+      height: 35px;
+      margin-bottom: 0.5rem;
+    }
+  }
+}
 </style>
 
 <script>
@@ -120,6 +140,7 @@ export default {
       species: 'species',
       gear: 'gear',
       markerBounds: 'markerBounds',
+      groupOptions: 'groupOptions',
     }),
   },
   mounted() {

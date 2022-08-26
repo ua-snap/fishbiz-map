@@ -27,6 +27,7 @@ export default createStore({
     speciesOptions: undefined,
     gearOptions: undefined,
     seasonDict: undefined,
+    groupOptions: undefined,
     groupDict: undefined,
     markerBounds: undefined,
   },
@@ -128,8 +129,11 @@ export default createStore({
     seasonDict(state) {
       return state.seasonDict
     },
+    groupOptions(state) {
+      return state.groupOptions
+    },
     groupDict(state) {
-      return state.groupDict
+      return dictifyOptions(state.groupOptions)
     },
     searchString(state) {
       return state.searchString
@@ -173,8 +177,8 @@ export default createStore({
     setSeasonDict(state, seasonDict) {
       state.seasonDict = seasonDict
     },
-    setGroupDict(state, groupDict) {
-      state.groupDict = groupDict
+    setGroupOptions(state, groupOptions) {
+      state.groupOptions = groupOptions
     },
     setFisheries(state, fisheries) {
       state.fisheries = fisheries
@@ -310,13 +314,14 @@ export default createStore({
       )
 
       let data = await response.json()
-
-      let groupDict = {}
-      data.forEach(result => {
-        groupDict[result['slug']] = result['name']
+      let groupOptions = _.map(data, result => {
+        return {
+          slug: result['slug'],
+          name: result['name'],
+        }
       })
 
-      context.commit('setGroupDict', groupDict)
+      context.commit('setGroupOptions', groupOptions)
     },
     async fetchFisheries(context) {
       let pages = _.range(1, 3)
