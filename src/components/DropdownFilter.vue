@@ -21,10 +21,13 @@ export default {
       selection: this.selected,
     }
   },
-  mounted() {
+  update() {
     this.selection = this.value
   },
   watch: {
+    value: function () {
+      this.selection = this.value
+    },
     selection: function () {
       this.$store.commit(this.mutation, this.selection)
     },

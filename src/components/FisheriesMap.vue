@@ -36,6 +36,7 @@
         mutation="filterGear"
         :value="gear"
       />
+      <button @click="clearFilters">Clear</button>
     </div>
     <div class="map-wrapper">
       &nbsp;
@@ -232,6 +233,14 @@ export default {
     textSearch: _.debounce(function () {
       this.$store.commit('filterSearchString', this.enteredString)
     }, 1000),
+    clearFilters: function () {
+      this.enteredString = undefined
+      this.$store.commit('filterSearchString', undefined)
+      this.$store.commit('filterRegion', undefined)
+      this.$store.commit('filterAccess', undefined)
+      this.$store.commit('filterSpecies', undefined)
+      this.$store.commit('filterGear', undefined)
+    },
   },
   unmounted() {
     this.map.remove()
