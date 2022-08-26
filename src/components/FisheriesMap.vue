@@ -64,18 +64,23 @@
 .filter {
   flex-basis: 20%;
   --vs-search-input-placeholder-color: #757575;
+  &::placeholder {
+    font-size: 14px;
+  }
 }
 input.filter {
   border: var(--vs-border-width) var(--vs-border-style) var(--vs-border-color);
-  font-size: var(--vs-font-size);
+  font-size: 14px;
   border-radius: 3px;
-  padding: 7px;
+  padding: 10px 14px;
+  background: none;
 }
 #map {
   position: absolute;
   top: 0;
   bottom: 0;
   width: 100%;
+  z-index: 500;
 }
 </style>
 

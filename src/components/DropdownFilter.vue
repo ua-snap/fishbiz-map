@@ -10,7 +10,39 @@
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss">
+.vs__selected + .vs__search {
+  display: none;
+}
+.v-select {
+  .vs__selected {
+    padding: 5px 10px;
+  }
+  &.vs--open.vs--single {
+    .vs__dropdown-menu {
+      margin: 0;
+    }
+    .vs__selected {
+      position: static;
+    }
+  }
+  .vs__search {
+    background: none;
+    border: none;
+    &:focus {
+      border: none;
+      font-size: inherit;
+      padding: 6px 12px;
+    }
+  }
+  button:hover {
+    background: none;
+    color: inherit;
+    border: none;
+    text-decoration: none;
+  }
+}
+</style>
 
 <script>
 export default {
