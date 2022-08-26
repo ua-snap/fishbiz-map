@@ -92,7 +92,7 @@ input.filter {
 }
 .legend {
   display: flex;
-  margin: 2rem 0;
+  margin: 3rem 0 2rem 0;
   div {
     flex-grow: 1;
     img {
