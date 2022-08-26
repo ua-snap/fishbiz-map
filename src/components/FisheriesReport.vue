@@ -54,7 +54,7 @@
   font-size: 1.6rem;
 }
 button {
-  margin: 0 0 1rem 0;
+  margin: 1rem 0;
   padding: 0.4em 0.8em;
   background: #0074d9;
   color: #fff;
