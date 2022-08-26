@@ -1,7 +1,7 @@
 <template>
   <div class="report">
     <h1>{{ groupDict[selectedGroup] }} in {{ regionDict[selectedRegion] }}</h1>
-    <button @click="reset">Back to map</button>
+    <button @click="goBack">Back to map</button>
     <div id="report" v-if="filteredFisheries[selectedRegion] != undefined">
       <div v-for="fishery in orderedResults()" :key="fishery">
         <h3 v-html="fishery['name']"></h3>
@@ -41,7 +41,7 @@
         </table>
       </div>
     </div>
-    <button @click="reset">Back to map</button>
+    <button @click="goBack">Back to map</button>
   </div>
 </template>
 
@@ -112,7 +112,7 @@ export default {
     }),
   },
   methods: {
-    reset: function () {
+    goBack: function () {
       this.$store.commit('closeReport')
     },
     joined: function (array, dict) {
