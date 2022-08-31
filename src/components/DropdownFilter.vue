@@ -10,11 +10,11 @@
   </div>
 </template>
 
-<style lang="scss">
-.vs__selected + .vs__search {
+<style lang="scss" scoped>
+:deep(.vs__selected + .vs__search) {
   display: none;
 }
-.v-select {
+:deep(.v-select) {
   .vs__selected {
     padding: 5px 10px;
   }
@@ -46,7 +46,7 @@
     padding: 6px 12px;
   }
 }
-button {
+:deep(button) {
   font-size: 16px;
   padding: 8px 14px;
   background: #0074d9;
@@ -60,6 +60,11 @@ button {
     text-decoration: none;
     border: 0;
     box-shadow: inset 0 0 0 99rem rgba(255, 255, 255, 0.2);
+    background: none;
+  }
+  &.vs__clear {
+    padding: 0;
+    background: none;
   }
 }
 </style>

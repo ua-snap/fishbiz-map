@@ -50,20 +50,13 @@ export default {
 </script>
 
 <style lang="scss">
+/* The #app div lives in WordPress, not Vue, so this cannot be scoped. */
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
   height: 900px;
   .error {
     position: relative;
     top: 40%;
     transform: translateY(-40%);
   }
-}
-body {
-  margin: 0;
 }
 </style>
