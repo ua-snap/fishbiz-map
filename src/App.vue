@@ -29,19 +29,21 @@ export default {
     fillWidth() {
       let windowWidth = window.innerWidth
       let containerDiv = document.querySelector('.container')
-      let containerWidth = containerDiv.offsetWidth
-      let appDiv = document.getElementById('app')
-      let marginStyle
-      if (windowWidth == containerWidth) {
-        let style = window.getComputedStyle(containerDiv)
-        let paddingWidth = style.paddingLeft
-        marginStyle = '-' + paddingWidth
-      } else {
-        let marginWidth = (windowWidth - containerWidth) / 2
-        marginStyle = '-' + marginWidth + 'px'
+      if (containerDiv != null) {
+        let containerWidth = containerDiv.offsetWidth
+        let appDiv = document.getElementById('app')
+        let marginStyle
+        if (windowWidth == containerWidth) {
+          let style = window.getComputedStyle(containerDiv)
+          let paddingWidth = style.paddingLeft
+          marginStyle = '-' + paddingWidth
+        } else {
+          let marginWidth = (windowWidth - containerWidth) / 2
+          marginStyle = '-' + marginWidth + 'px'
+        }
+        appDiv.style.marginLeft = marginStyle
+        appDiv.style.marginRight = marginStyle
       }
-      appDiv.style.marginLeft = marginStyle
-      appDiv.style.marginRight = marginStyle
     },
   },
 }
