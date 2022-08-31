@@ -151,6 +151,7 @@ export default {
         format: 'image/png',
         transparent: true,
         attribution: 'USGS',
+        baseLayer: true,
       }
     )
     this.map = L.map('map', {
@@ -196,8 +197,16 @@ export default {
   },
   methods: {
     addMarkers: function () {
-      if (this.markerFeatureGroup != undefined) {
-        this.markerFeatureGroup.clearLayers()
+      // Slightly unusual way to do this to get around a "listener not found"
+      // console log bug when removing the entire featureGroup at once.
+      // Might be related to the following bug:
+      // https://github.com/Leaflet/Leaflet.markercluster/issues/1062
+      if (this.map != undefined) {
+        this.map.eachLayer(layer => {
+          if (!layer.options.baseLayer) {
+            this.map.removeLayer(layer)
+          }
+        })
       }
       let markers = []
       let spread = 1.5
