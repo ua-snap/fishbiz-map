@@ -30,6 +30,7 @@ export default createStore({
     groupOptions: undefined,
     groupDict: undefined,
     markerBounds: undefined,
+    error: false,
   },
 
   getters: {
@@ -153,6 +154,9 @@ export default createStore({
     markerBounds(state) {
       return state.markerBounds
     },
+    error(state) {
+      return state.error
+    },
   },
 
   mutations: {
@@ -214,6 +218,9 @@ export default createStore({
     setMarkerBounds(state, markerBounds) {
       state.markerBounds = markerBounds
     },
+    setError(state) {
+      state.error = true
+    },
   },
 
   actions: {
@@ -221,6 +228,10 @@ export default createStore({
       let response = await fetch(
         process.env.VUE_APP_WORDPRESS_URL + '/wp-json/wp/v2/region?per_page=100'
       )
+
+      if (response.status != 200) {
+        context.commit('setError')
+      }
 
       let data = await response.json()
       let regions = {}
@@ -252,6 +263,10 @@ export default createStore({
         process.env.VUE_APP_WORDPRESS_URL + '/wp-json/wp/v2/entry?per_page=100'
       )
 
+      if (response.status != 200) {
+        context.commit('setError')
+      }
+
       let data = await response.json()
       let accessOptions = _.map(data, result => {
         return {
@@ -268,6 +283,10 @@ export default createStore({
           '/wp-json/wp/v2/species?per_page=100'
       )
 
+      if (response.status != 200) {
+        context.commit('setError')
+      }
+
       let data = await response.json()
       let speciesOptions = _.map(data, result => {
         return {
@@ -282,6 +301,10 @@ export default createStore({
       let response = await fetch(
         process.env.VUE_APP_WORDPRESS_URL + '/wp-json/wp/v2/gear?per_page=100'
       )
+
+      if (response.status != 200) {
+        context.commit('setError')
+      }
 
       let data = await response.json()
       let gearOptions = _.map(data, result => {
@@ -298,6 +321,10 @@ export default createStore({
         process.env.VUE_APP_WORDPRESS_URL + '/wp-json/wp/v2/season?per_page=100'
       )
 
+      if (response.status != 200) {
+        context.commit('setError')
+      }
+
       let data = await response.json()
 
       let seasonDict = {}
@@ -312,6 +339,10 @@ export default createStore({
         process.env.VUE_APP_WORDPRESS_URL +
           '/wp-json/wp/v2/fish_group?per_page=100'
       )
+
+      if (response.status != 200) {
+        context.commit('setError')
+      }
 
       let data = await response.json()
       let groupOptions = _.map(data, result => {
@@ -338,9 +369,12 @@ export default createStore({
       let results
       await Promise.all(
         _.map(urls, url => {
-          return fetch(url).then(
-            res => (res.ok && res.json()) || Promise.reject(res)
-          )
+          return fetch(url).then(response => {
+            if (response.status != 200) {
+              context.commit('setError')
+            }
+            return (response.ok && response.json()) || Promise.reject(response)
+          })
         })
       ).then(data => {
         results = [].concat.apply([], data)
@@ -356,7 +390,6 @@ export default createStore({
           return region['slug']
         })
 
-        // TODO: Add some error checking here in case there are no array elements.
         let group = result['fishery_group'][0]['slug']
         let access = result['fishery_entry_type'][0]['slug']
         let species = result['fishery_species'][0]['slug']
