@@ -9,6 +9,58 @@ function dictifyOptions(options) {
   return dict
 }
 
+function processFisheries(context, results) {
+  let fisheries = []
+  let grouped = {}
+
+  results.forEach(result => {
+    let name = result['title']['rendered']
+
+    let regions = _.map(result['fishery_regions'], region => {
+      return region['slug']
+    })
+
+    let group = result['fishery_group'][0]['slug']
+    let access = result['fishery_entry_type'][0]['slug']
+    let species = result['fishery_species'][0]['slug']
+    let gear = result['fishery_gear'][0]['slug']
+
+    let seasons = _.map(result['fishery_seasons'], season => {
+      return season['slug']
+    })
+
+    let code = result['fishery_code']
+    let link = result['link_to_resource']
+
+    let fishery = {
+      name: name,
+      region: regions,
+      seasons: seasons,
+      group: group,
+      species: species,
+      access: access,
+      gear: gear,
+      code: code,
+      link: link,
+    }
+
+    fisheries.push(fishery)
+
+    regions.forEach(region => {
+      if (!_.has(grouped, region)) {
+        grouped[region] = {}
+      }
+      if (!_.has(grouped[region], group)) {
+        grouped[region][group] = []
+      }
+      grouped[region][group].push(fishery)
+    })
+  })
+
+  context.commit('setFisheries', fisheries)
+  context.commit('setGroupedFisheries', grouped)
+}
+
 export default createStore({
   state: {
     layer: undefined,
@@ -379,56 +431,11 @@ export default createStore({
       ).then(data => {
         results = [].concat.apply([], data)
       })
-
-      let fisheries = []
-      let grouped = {}
-
-      results.forEach(result => {
-        let name = result['title']['rendered']
-
-        let regions = _.map(result['fishery_regions'], region => {
-          return region['slug']
-        })
-
-        let group = result['fishery_group'][0]['slug']
-        let access = result['fishery_entry_type'][0]['slug']
-        let species = result['fishery_species'][0]['slug']
-        let gear = result['fishery_gear'][0]['slug']
-
-        let seasons = _.map(result['fishery_seasons'], season => {
-          return season['slug']
-        })
-
-        let code = result['fishery_code']
-        let link = result['link_to_resource']
-
-        let fishery = {
-          name: name,
-          region: regions,
-          seasons: seasons,
-          group: group,
-          species: species,
-          access: access,
-          gear: gear,
-          code: code,
-          link: link,
-        }
-
-        fisheries.push(fishery)
-
-        regions.forEach(region => {
-          if (!_.has(grouped, region)) {
-            grouped[region] = {}
-          }
-          if (!_.has(grouped[region], group)) {
-            grouped[region][group] = []
-          }
-          grouped[region][group].push(fishery)
-        })
-      })
-
-      context.commit('setFisheries', fisheries)
-      context.commit('setGroupedFisheries', grouped)
+      try {
+        processFisheries(context, results)
+      } catch {
+        context.commit('setError')
+      }
     },
   },
 })
