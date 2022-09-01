@@ -110,7 +110,6 @@ import _ from 'lodash'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { mapGetters } from 'vuex'
-
 import DropdownFilter from './DropdownFilter.vue'
 
 export default {
