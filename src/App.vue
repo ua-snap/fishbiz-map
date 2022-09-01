@@ -28,14 +28,17 @@ export default {
   methods: {
     fillWidth() {
       let windowWidth = window.innerWidth
+      let scrollbarWidth =
+        window.innerWidth - document.documentElement.clientWidth
       let containerDiv = document.querySelector('.container')
       if (containerDiv != null) {
         let containerWidth = containerDiv.offsetWidth
         let appDiv = document.getElementById('app')
+        let style = window.getComputedStyle(containerDiv)
+        let paddingWidth = style.paddingLeft
+        containerWidth -= parseInt(paddingWidth) * 2 - scrollbarWidth
         let marginStyle
         if (windowWidth == containerWidth) {
-          let style = window.getComputedStyle(containerDiv)
-          let paddingWidth = style.paddingLeft
           marginStyle = '-' + paddingWidth
         } else {
           let marginWidth = (windowWidth - containerWidth) / 2
