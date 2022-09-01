@@ -1,29 +1,26 @@
 <template>
   <div class="report">
-    <h1>{{ selectedGroup }} in {{ selectedRegion }}</h1>
-    <div id="report" v-if="groupedFisheries[selectedRegion] != undefined">
-      <button @click="reset">Back to map</button>
-      <div
-        v-for="fishery in groupedFisheries[selectedRegion][selectedGroup]"
-        :key="fishery"
-      >
+    <h1>{{ groupDict[selectedGroup] }} in {{ regionDict[selectedRegion] }}</h1>
+    <button @click="goBack">Back to map</button>
+    <div id="report" v-if="filteredFisheries[selectedRegion] != undefined">
+      <div v-for="fishery in orderedResults()" :key="fishery">
         <h3 v-html="fishery['name']"></h3>
         <table>
           <tr>
-            <td style="width: 200px">Access</td>
-            <td v-html="fishery['entry']"></td>
+            <td>Access</td>
+            <td v-html="accessDict[fishery['access']]"></td>
           </tr>
           <tr>
             <td>Species</td>
-            <td v-html="fishery['species']"></td>
+            <td v-html="speciesDict[fishery['species']]"></td>
           </tr>
           <tr>
             <td>Gear</td>
-            <td v-html="fishery['gear']"></td>
+            <td v-html="gearDict[fishery['gear']]"></td>
           </tr>
           <tr>
             <td>Region</td>
-            <td v-html="fishery['region']"></td>
+            <td v-html="joined(fishery['region'], regionDict)"></td>
           </tr>
           <tr>
             <td>CFEC code</td>
@@ -31,19 +28,20 @@
           </tr>
           <tr>
             <td>Seasons</td>
-            <td v-html="fishery['seasons']"></td>
+            <td v-html="joined(fishery['seasons'], seasonDict)"></td>
           </tr>
           <tr>
             <td>Link</td>
             <td>
-              <a :href="fishery['link']">{{ fishery['link'] }}</a>
+              <a :href="fishery['link']"
+                >See more information about this fishery</a
+              >
             </td>
           </tr>
         </table>
-        <hr />
       </div>
     </div>
-    <button @click="reset">Back to map</button>
+    <button @click="goBack">Back to map</button>
   </div>
 </template>
 
@@ -51,37 +49,82 @@
 .report {
   margin: 0 2rem;
   text-align: left;
-}
-button {
-  margin-bottom: 1rem;
-}
-h1,
-h3 {
-  text-align: left;
-}
-hr {
-  margin: 2rem 0;
-}
-td {
-  text-align: left;
+  max-height: 900px;
+  overflow-y: auto;
+  font-size: 16px;
+  h1 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+  button {
+    margin: 1rem 0;
+    padding: 6px 12px;
+    background: #0074d9;
+    color: #fff;
+    border: 0;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    &:hover {
+      box-shadow: inset 0 0 0 99rem rgba(255, 255, 255, 0.2);
+      border: 0;
+    }
+  }
+  table {
+    margin-bottom: 2rem;
+  }
+  tr:nth-child(even) {
+    background: rgba(17, 17, 17, 0.05);
+  }
+  td {
+    padding: 0.3rem 2.4rem 0.3rem 0.6rem;
+    a {
+      text-decoration: none;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
 }
 </style>
 
 <script>
+import _ from 'lodash'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'FisheriesReport',
   computed: {
     ...mapGetters({
-      groupedFisheries: 'groupedFisheries',
+      filteredFisheries: 'filteredFisheries',
       selectedRegion: 'selectedRegion',
       selectedGroup: 'selectedGroup',
+      accessDict: 'accessDict',
+      speciesDict: 'speciesDict',
+      gearDict: 'gearDict',
+      regionDict: 'regionDict',
+      seasonDict: 'seasonDict',
+      groupDict: 'groupDict',
     }),
   },
   methods: {
-    reset: function () {
+    goBack: function () {
       this.$store.commit('closeReport')
+    },
+    joined: function (array, dict) {
+      return _.map(array, key => dict[key]).join(', ')
+    },
+    orderedResults: function () {
+      return _.orderBy(
+        this.filteredFisheries[this.selectedRegion][this.selectedGroup],
+        'name'
+      )
     },
   },
 }

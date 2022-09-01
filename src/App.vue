@@ -1,6 +1,7 @@
 <template>
-  <FisheriesMap v-if="!this.reportIsVisible" />
-  <FisheriesReport v-if="this.reportIsVisible" />
+  <FisheriesMap v-if="!this.reportIsVisible && !this.error" />
+  <FisheriesReport v-if="this.reportIsVisible && !this.error" />
+  <div v-if="this.error" class="error">Failed to load fisheries map.</div>
 </template>
 
 <script>
@@ -12,34 +13,53 @@ export default {
   name: 'App',
   components: {
     FisheriesMap,
-    FisheriesReport
+    FisheriesReport,
   },
-  created() {
-    this.$store.dispatch("fetchRegions");
-    this.$store.dispatch("fetchFisheries");
+  mounted() {
+    this.fillWidth()
+    window.addEventListener('resize', this.fillWidth)
   },
   computed: {
     ...mapGetters({
       reportIsVisible: 'reportIsVisible',
+      error: 'error',
     }),
-  }
+  },
+  methods: {
+    fillWidth() {
+      let windowWidth = window.innerWidth
+      let scrollbarWidth =
+        window.innerWidth - document.documentElement.clientWidth
+      let containerDiv = document.querySelector('.container')
+      if (containerDiv != null) {
+        let containerWidth = containerDiv.offsetWidth
+        let appDiv = document.getElementById('app')
+        let style = window.getComputedStyle(containerDiv)
+        let paddingWidth = style.paddingLeft
+        containerWidth -= parseInt(paddingWidth) * 2 - scrollbarWidth
+        let marginStyle
+        if (windowWidth == containerWidth) {
+          marginStyle = '-' + paddingWidth
+        } else {
+          let marginWidth = (windowWidth - containerWidth) / 2
+          marginStyle = '-' + marginWidth + 'px'
+        }
+        appDiv.style.marginLeft = marginStyle
+        appDiv.style.marginRight = marginStyle
+      }
+    },
+  },
 }
 </script>
 
-<style>
+<style lang="scss">
+/* The #app div lives in WordPress, not Vue, so this cannot be scoped. */
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-body {
-  margin: 0;
-}
-.container:not(.is-max-desktop):not(.is-max-widescreen) {
-  max-width: 100% !important;
-  width: 100% !important;
-  padding: 0;
+  height: 900px;
+  .error {
+    position: relative;
+    top: 40%;
+    transform: translateY(-40%);
+  }
 }
 </style>
