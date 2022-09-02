@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import 'purecss/build/pure.css'
 import FisheriesMap from './components/FisheriesMap.vue'
 import FisheriesReport from './components/FisheriesReport.vue'
 import { mapGetters } from 'vuex'
@@ -52,14 +53,4 @@ export default {
 }
 </script>
 
-<style lang="scss">
-/* The #app div lives in WordPress, not Vue, so this cannot be scoped. */
-#app {
-  height: 900px;
-  .error {
-    position: relative;
-    top: 40%;
-    transform: translateY(-40%);
-  }
-}
-</style>
+<style lang="scss" scoped></style>
