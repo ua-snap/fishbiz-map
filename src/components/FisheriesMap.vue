@@ -217,7 +217,6 @@ export default {
         })
       }
 
-      this.map.dragging.enable()
       this.markers = []
       let spread = 1.5
       let jitterOffsets = {
