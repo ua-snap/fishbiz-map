@@ -208,6 +208,8 @@ export default {
           }
         })
       }
+
+      this.map.dragging.enable()
       let totalMarkers = 0
       let markers = []
       let spread = 1.5
@@ -253,25 +255,24 @@ export default {
           }
         })
       })
-      if (totalMarkers === 0) {
-        // If no markers are present, alert the user
-        console.log('Test')
-        var imageUrl = require('../assets/images/icons/no-results.png')
 
-        let latLngBounds = this.map.getBounds()
-
-        L.imageOverlay(imageUrl, latLngBounds, {
-          opacity: 0.8,
-          interactive: false,
-        }).addTo(this.map)
-      }
       this.markerFeatureGroup = L.featureGroup(markers).addTo(this.map)
       if (this.markerBounds == undefined) {
         let markerBounds = this.markerFeatureGroup.getBounds().pad(0.05)
         this.$store.commit('setMarkerBounds', markerBounds)
-      } else {
-        this.map.fitBounds(this.markerBounds)
-        this.map.setMinZoom(this.map.getZoom())
+      }
+      this.map.fitBounds(this.markerBounds)
+
+      if (totalMarkers === 0) {
+        // If no markers are present, alert the user
+        var imageUrl = require('../assets/images/icons/no-results.png')
+
+        L.imageOverlay(imageUrl, this.map.getBounds(), {
+          opacity: 0.8,
+          interactive: false,
+        }).addTo(this.map)
+
+        this.map.dragging.disable()
       }
     },
     handleMapClick: function (region, group) {
