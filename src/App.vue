@@ -1,5 +1,5 @@
 <template>
-  <FisheriesMap v-if="!this.reportIsVisible && !this.error" />
+  <FisheriesMap v-show="!this.reportIsVisible && !this.error" />
   <FisheriesReport v-if="this.reportIsVisible && !this.error" />
   <div v-if="this.error" class="error">Failed to load fisheries map.</div>
 </template>
