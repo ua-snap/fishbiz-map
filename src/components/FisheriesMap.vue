@@ -40,8 +40,10 @@
     </div>
     <div class="map-wrapper">
       &nbsp;
-      <div id="map"></div>
+      <div v-show="markers == 'startup' || markers.length > 0" id="map"></div>
+      <div v-show="markers.length === 0" id="noresults">No results found</div>
     </div>
+
     <div class="legend">
       <div v-for="group in groupOptions" :key="group">
         <img
@@ -91,6 +93,9 @@ input.filter {
   width: 100%;
   z-index: 500;
 }
+#noresults {
+  font-size: 60px;
+}
 .legend {
   display: flex;
   margin: 3rem 0 2rem 0;
@@ -120,7 +125,7 @@ export default {
   data() {
     return {
       map: undefined,
-      markers: {},
+      markers: 'startup',
       markerLayerGroup: undefined,
       enteredString: undefined,
     }
@@ -210,8 +215,7 @@ export default {
       }
 
       this.map.dragging.enable()
-      let totalMarkers = 0
-      let markers = []
+      this.markers = []
       let spread = 1.5
       let jitterOffsets = {
         finfish: { lat: 0, lon: 0 },
@@ -230,7 +234,6 @@ export default {
         }
 
         Object.keys(this.filteredFisheries[region]).forEach(group => {
-          totalMarkers += this.filteredFisheries[region][group].length
           if (this.filteredFisheries[region][group].length > 0) {
             // The weird math here is to deal with more northern latitudes being
             // slightly further apart. Marker icons appear equally offset from each
@@ -251,28 +254,18 @@ export default {
             marker.on('click', () => {
               this.handleMapClick(region, group)
             })
-            markers.push(marker)
+            this.markers.push(marker)
           }
         })
       })
 
-      this.markerFeatureGroup = L.featureGroup(markers).addTo(this.map)
+      this.markerFeatureGroup = L.featureGroup(this.markers).addTo(this.map)
       if (this.markerBounds == undefined) {
         let markerBounds = this.markerFeatureGroup.getBounds().pad(0.05)
         this.$store.commit('setMarkerBounds', markerBounds)
-      }
-      this.map.fitBounds(this.markerBounds)
-
-      if (totalMarkers === 0) {
-        // If no markers are present, alert the user
-        var imageUrl = require('../assets/images/icons/no-results.png')
-
-        L.imageOverlay(imageUrl, this.map.getBounds(), {
-          opacity: 0.8,
-          interactive: false,
-        }).addTo(this.map)
-
-        this.map.dragging.disable()
+      } else {
+        this.map.fitBounds(this.markerBounds)
+        this.map.setMinZoom(this.map.getZoom())
       }
     },
     handleMapClick: function (region, group) {
