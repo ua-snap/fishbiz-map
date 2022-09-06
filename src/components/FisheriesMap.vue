@@ -208,6 +208,7 @@ export default {
           }
         })
       }
+      let totalMarkers = 0
       let markers = []
       let spread = 1.5
       let jitterOffsets = {
@@ -227,6 +228,7 @@ export default {
         }
 
         Object.keys(this.filteredFisheries[region]).forEach(group => {
+          totalMarkers += this.filteredFisheries[region][group].length
           if (this.filteredFisheries[region][group].length > 0) {
             // The weird math here is to deal with more northern latitudes being
             // slightly further apart. Marker icons appear equally offset from each
@@ -251,6 +253,18 @@ export default {
           }
         })
       })
+      if (totalMarkers === 0) {
+        // If no markers are present, alert the user
+        console.log('Test')
+        var imageUrl = require('../assets/images/icons/no-results.png')
+
+        let latLngBounds = this.map.getBounds()
+
+        L.imageOverlay(imageUrl, latLngBounds, {
+          opacity: 0.8,
+          interactive: false,
+        }).addTo(this.map)
+      }
       this.markerFeatureGroup = L.featureGroup(markers).addTo(this.map)
       if (this.markerBounds == undefined) {
         let markerBounds = this.markerFeatureGroup.getBounds().pad(0.05)
