@@ -41,7 +41,10 @@
     <div class="map-wrapper">
       &nbsp;
       <div v-show="markers == 'startup' || markers.length > 0" id="map"></div>
-      <div v-show="markers.length === 0" id="noresults">No results found</div>
+      <div v-show="markers.length === 0" id="noresults">
+        <p>No results found</p>
+        <button @click="clearFilters">Start Again</button>
+      </div>
     </div>
 
     <div class="legend">
