@@ -9,10 +9,14 @@ function dictifyOptions(options) {
   return dict
 }
 
+function sortAlphabetically(arr) {
+  return arr.sort((a, b) => a.name.localeCompare(b.name))
+}
+
 function removeDuplicates(arr) {
   let jsonObject = arr.map(JSON.stringify)
   let uniqueSet = new Set(jsonObject)
-  return Array.from(uniqueSet).map(JSON.parse)
+  return sortAlphabetically(Array.from(uniqueSet).map(JSON.parse))
 }
 
 function processRegions(context, results) {
@@ -43,7 +47,7 @@ function processRegions(context, results) {
   })
 
   context.commit('setRegions', regions)
-  context.commit('setRegionOptions', regionOptions)
+  context.commit('setRegionOptions', sortAlphabetically(regionOptions))
 }
 
 function processAccess(context, results) {
