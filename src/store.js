@@ -79,8 +79,9 @@ function processSpecies(context, results) {
 function processSeasons(context, results) {
   let seasonDict = {}
   results.forEach(result => {
-    seasonDict[result['fishery_seasons']['slug']] =
-      result['fishery_seasons']['name']
+    result['fishery_seasons'].forEach(season => {
+      seasonDict[season['slug']] = season['name']
+    })
   })
 
   context.commit('setSeasonDict', seasonDict)
