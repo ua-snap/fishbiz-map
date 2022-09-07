@@ -63,7 +63,6 @@ function processFisheries(context, results) {
 
 export default createStore({
   state: {
-    layer: undefined,
     searchString: undefined,
     regions: undefined,
     access: undefined,
@@ -212,9 +211,6 @@ export default createStore({
   },
 
   mutations: {
-    destroy(state) {
-      state.layer = undefined
-    },
     setRegions(state, regions) {
       state.regions = regions
     },
