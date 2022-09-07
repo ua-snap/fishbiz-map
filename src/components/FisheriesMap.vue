@@ -40,8 +40,13 @@
     </div>
     <div class="map-wrapper">
       &nbsp;
-      <div id="map"></div>
+      <div v-show="markers == 'startup' || markers.length > 0" id="map"></div>
+      <div v-show="markers.length === 0" id="noresults">
+        <p><strong>There are no matching results</strong> found for the combination of filters you have selected.  Choose different filters, or click the button below to reset all filters and start again.</p>
+        <button @click="clearFilters">Clear filters and start again</button>
+      </div>
     </div>
+
     <div class="legend">
       <div v-for="group in groupOptions" :key="group">
         <img
@@ -91,6 +96,9 @@ input.filter {
   width: 100%;
   z-index: 500;
 }
+#noresults {
+  font-size: 1.25rem;
+}
 .legend {
   display: flex;
   margin: 3rem 0 2rem 0;
@@ -120,7 +128,7 @@ export default {
   data() {
     return {
       map: undefined,
-      markers: {},
+      markers: 'startup',
       markerLayerGroup: undefined,
       enteredString: undefined,
     }
@@ -208,7 +216,8 @@ export default {
           }
         })
       }
-      let markers = []
+
+      this.markers = []
       let spread = 1.5
       let jitterOffsets = {
         finfish: { lat: 0, lon: 0 },
@@ -247,11 +256,12 @@ export default {
             marker.on('click', () => {
               this.handleMapClick(region, group)
             })
-            markers.push(marker)
+            this.markers.push(marker)
           }
         })
       })
-      this.markerFeatureGroup = L.featureGroup(markers).addTo(this.map)
+
+      this.markerFeatureGroup = L.featureGroup(this.markers).addTo(this.map)
       if (this.markerBounds == undefined) {
         let markerBounds = this.markerFeatureGroup.getBounds().pad(0.05)
         this.$store.commit('setMarkerBounds', markerBounds)
