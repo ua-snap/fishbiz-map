@@ -6,31 +6,39 @@
       <div v-for="fishery in orderedResults()" :key="fishery">
         <h3 v-html="fishery['name']"></h3>
         <table>
-          <tr>
+          <tr v-if="fishery['access']">
             <td>Access</td>
             <td v-html="accessDict[fishery['access']]"></td>
           </tr>
-          <tr>
+          <tr v-if="fishery['species']">
             <td>Species</td>
             <td v-html="speciesDict[fishery['species']]"></td>
           </tr>
-          <tr>
+          <tr v-if="fishery['gear']">
             <td>Gear</td>
             <td v-html="gearDict[fishery['gear']]"></td>
           </tr>
-          <tr>
+          <tr
+            v-if="
+              fishery['region'] && Object.keys(fishery['region']).length > 0
+            "
+          >
             <td>Region</td>
             <td v-html="joined(fishery['region'], regionDict)"></td>
           </tr>
-          <tr>
+          <tr v-if="fishery['code']">
             <td>CFEC code</td>
             <td v-html="fishery['code']"></td>
           </tr>
-          <tr>
+          <tr
+            v-if="
+              fishery['seasons'] && Object.keys(fishery['seasons']).length > 0
+            "
+          >
             <td>Seasons</td>
             <td v-html="joined(fishery['seasons'], seasonDict)"></td>
           </tr>
-          <tr>
+          <tr v-if="fishery['link']">
             <td>Link</td>
             <td>
               <a :href="fishery['link']"
