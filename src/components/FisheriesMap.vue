@@ -42,8 +42,8 @@
       &nbsp;
       <div v-show="markers == 'startup' || markers.length > 0" id="map"></div>
       <div v-show="markers.length === 0" id="noresults">
-        <p>No results found</p>
-        <button @click="clearFilters">Start Again</button>
+        <p><strong>There are no matching results</strong> found for the combination of filters you have selected.  Choose different filters, or click the button below to reset all filters and start again.</p>
+        <button @click="clearFilters">Clear filters and start again</button>
       </div>
     </div>
 
@@ -97,7 +97,7 @@ input.filter {
   z-index: 500;
 }
 #noresults {
-  font-size: 60px;
+  font-size: 1.25rem;
 }
 .legend {
   display: flex;
