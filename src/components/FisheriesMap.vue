@@ -290,7 +290,6 @@ export default {
   },
   unmounted() {
     this.map.remove()
-    this.$store.commit('destroy')
   },
 }
 </script>
