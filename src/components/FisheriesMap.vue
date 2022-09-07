@@ -42,17 +42,12 @@
       &nbsp;
       <div v-show="markers == 'startup' || markers.length > 0" id="map"></div>
       <div v-show="markers.length === 0" id="noresults">
-        <p><strong>There are no matching results</strong> found for the combination of filters you have selected.  Choose different filters, or click the button below to reset all filters and start again.</p>
+        <p>
+          <strong>There are no matching results</strong> found for the
+          combination of filters you have selected. Choose different filters, or
+          click the button below to reset all filters and start again.
+        </p>
         <button @click="clearFilters">Clear filters and start again</button>
-      </div>
-    </div>
-
-    <div class="legend">
-      <div v-for="group in groupOptions" :key="group">
-        <img
-          :src="require('@/assets/images/icons/' + group['slug'] + '.png')"
-        />
-        <br />{{ group['name'] }}
       </div>
     </div>
   </div>
@@ -98,18 +93,6 @@ input.filter {
 }
 #noresults {
   font-size: 1.25rem;
-}
-.legend {
-  display: flex;
-  margin: 3rem 0 2rem 0;
-  div {
-    flex-grow: 1;
-    img {
-      width: 35px;
-      height: 35px;
-      margin-bottom: 0.5rem;
-    }
-  }
 }
 </style>
 
