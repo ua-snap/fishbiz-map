@@ -74,6 +74,10 @@ input[type='text'].filter {
   padding: 4px;
   position: relative;
   top: 1px;
+
+  &::placeholder {
+    color: #000;
+  }
 }
 .filter {
   margin: 1rem 1rem 0;

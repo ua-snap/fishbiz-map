@@ -11,6 +11,21 @@
 </template>
 
 <style lang="scss" scoped>
+// Adjustments needed to make the combo box work OK in WP
+:deep(input[type="search"]) {
+  &::placeholder {
+    color: #000;
+  }
+  &:focus {
+    font-size: 16px;
+    border-radius: 0;
+    color: #000;
+  }
+  padding: 0 7px;
+  transition: initial;
+  border: 1px solid transparent;
+  width: 0;
+}
 </style>
 
 <script>
