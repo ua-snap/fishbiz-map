@@ -265,7 +265,6 @@ export default {
       if (this.markerBounds == undefined) {
         let markerBounds = this.markerFeatureGroup.getBounds().pad(0.05)
         this.$store.commit('setMarkerBounds', markerBounds)
-      } else {
         this.map.fitBounds(this.markerBounds)
         this.map.setMinZoom(this.map.getZoom())
       }
