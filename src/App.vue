@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import 'purecss/build/pure.css'
 import FisheriesMap from './components/FisheriesMap.vue'
 import FisheriesReport from './components/FisheriesReport.vue'
 import { mapGetters } from 'vuex'
@@ -28,7 +29,6 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap');
 /* The #app div lives in WordPress, not Vue, so this cannot be scoped. */
 #app {
-  height: 900px;
   font-family: 'Raleway', sans-serif;
   .error {
     position: relative;

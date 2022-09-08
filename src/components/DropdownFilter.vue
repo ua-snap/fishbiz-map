@@ -11,61 +11,32 @@
 </template>
 
 <style lang="scss" scoped>
-:deep(.vs__selected + .vs__search) {
-  display: none;
+// We need to adjust the CSS a little bit so that
+// the combo boxes work properly with WP's styling.
+:deep(*) {
+  font-family: 'Raleway', sans-serif;
 }
-:deep(.v-select) {
-  .vs__selected {
-    padding: 5px 10px;
+
+// The box/dropbown itself...
+:deep(input[type='search']) {
+  &::placeholder {
+    color: #000;
   }
-  &.vs--open.vs--single {
-    .vs__dropdown-menu {
-      margin: 0;
-    }
-    .vs__selected {
-      position: static;
-    }
-  }
-  .vs__fade-enter-active,
-  .vs__fade-leave-active {
-    &.vs__dropdown-menu {
-      margin: 0;
-    }
-  }
-  .vs__search {
-    background: none;
-    border: none;
-    &:focus {
-      border: none;
-      font-size: inherit;
-      padding: 6px 12px;
-    }
-  }
-  .vs__search {
+  &:focus {
     font-size: 14px;
-    padding: 6px 12px;
+    border-radius: 0;
+    color: #000;
   }
+  padding: 0 7px;
+  transition: initial;
+  border: 1px solid transparent;
+  width: 0;
 }
-:deep(button) {
-  font-size: 16px;
-  padding: 8px 14px;
-  background: #0074d9;
-  transition: all 0.3s;
-  border: 0;
-  border-radius: 0.4rem;
-  color: #fff;
-  cursor: pointer;
-  box-shadow: inset 0 0 0 99rem rgba(255, 255, 255, 0);
-  &:hover {
-    text-decoration: none;
-    border: 0;
-    box-shadow: inset 0 0 0 99rem rgba(255, 255, 255, 0.2);
-    background: none;
-  }
-  &.vs__clear {
-    padding: 0;
-    background: none;
-  }
+
+// Font fixups for the sub-menus...
+:deep(ul) {
+  font-size: 14px;
+  color: #000;
 }
 </style>
 

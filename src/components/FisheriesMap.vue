@@ -1,42 +1,54 @@
 <template>
   <div class="app-contents">
-    <div class="filters">
-      <input
-        type="text"
-        class="filter"
-        placeholder="Search"
-        @input="textSearch"
-        v-model="enteredString"
-      />
-      <DropdownFilter
-        class="filter"
-        placeholder="Region"
-        :options="regionOptions"
-        mutation="filterRegion"
-        :value="region"
-      />
-      <DropdownFilter
-        class="filter"
-        placeholder="Access"
-        :options="accessOptions"
-        mutation="filterAccess"
-        :value="access"
-      />
-      <DropdownFilter
-        class="filter"
-        placeholder="Species"
-        :options="speciesOptions"
-        mutation="filterSpecies"
-        :value="species"
-      />
-      <DropdownFilter
-        class="filter"
-        placeholder="Gear"
-        :options="gearOptions"
-        mutation="filterGear"
-        :value="gear"
-      />
-      <button @click="clearFilters">Clear</button>
+    <div class="filters pure-g">
+      <div class="pure-u-4-24 filter">
+        <input
+          type="text"
+          class="filter"
+          placeholder="Search"
+          @input="textSearch"
+          v-model="enteredString"
+        />
+      </div>
+      <div class="pure-u-4-24">
+        <DropdownFilter
+          class="filter"
+          placeholder="Region"
+          :options="regionOptions"
+          mutation="filterRegion"
+          :value="region"
+        />
+      </div>
+      <div class="pure-u-4-24">
+        <DropdownFilter
+          class="filter"
+          placeholder="Access"
+          :options="accessOptions"
+          mutation="filterAccess"
+          :value="access"
+        />
+      </div>
+      <div class="pure-u-4-24">
+        <DropdownFilter
+          class="filter"
+          placeholder="Species"
+          :options="speciesOptions"
+          mutation="filterSpecies"
+          :value="species"
+        />
+      </div>
+      <div class="pure-u-4-24">
+        <DropdownFilter
+          class="filter"
+          placeholder="Gear"
+          :options="gearOptions"
+          mutation="filterGear"
+          :value="gear"
+        />
+      </div>
+      <div class="pure-u">
+        <button class="filter pure-button" @click="clearFilters">Clear</button>
+      </div>
     </div>
     <div class="map-wrapper">
       &nbsp;
@@ -47,51 +59,37 @@
           combination of filters you have selected. Choose different filters, or
           click the button below to reset all filters and start again.
         </p>
-        <button @click="clearFilters">Clear filters and start again</button>
+        <button class="pure-button" @click="clearFilters">
+          Clear filters and start again
+        </button>
+        <div id="map"></div>
       </div>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.app-contents {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  text-align: center;
-}
-.map-wrapper {
+input[type='text'].filter {
+  width: 100%;
+  margin: 0;
+  font-size: 110%;
+  padding: 4px;
   position: relative;
-  height: 100%;
-}
-.filters {
-  display: flex;
-  @media (max-width: 1000px) {
-    flex-direction: column;
+  top: 1px;
+
+  &::placeholder {
+    color: #000;
   }
 }
 .filter {
-  flex-basis: 20%;
-  --vs-search-input-placeholder-color: #757575;
-  font-family: 'Raleway', sans-serif;
-  &::placeholder {
-    font-size: 14px;
-  }
+  margin: 1rem 1rem 0;
 }
-input.filter {
-  border: var(--vs-border-width) var(--vs-border-style) var(--vs-border-color);
-  font-size: 14px;
-  border-radius: 3px;
-  padding: 10px 14px;
-  background: none;
-}
+
 #map {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 100%;
-  z-index: 500;
+  min-height: 150px;
+  height: 75vh;
 }
+
 #noresults {
   font-size: 1.25rem;
 }
