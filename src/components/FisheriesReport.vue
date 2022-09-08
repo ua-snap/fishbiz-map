@@ -57,7 +57,7 @@
 .report {
   margin: 0 2rem;
   text-align: left;
-  max-height: 900px;
+  max-height: 100%;
   overflow-y: auto;
   font-size: 16px;
   h1,
