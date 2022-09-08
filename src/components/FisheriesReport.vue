@@ -60,9 +60,9 @@
   max-height: 900px;
   overflow-y: auto;
   font-size: 16px;
-  h1 {
-    margin-top: 20px;
-    margin-bottom: 10px;
+  h1,
+  h3 {
+    font-family: 'Raleway', sans-serif;
   }
   button {
     margin: 1rem 0;
@@ -73,7 +73,6 @@
     border-radius: 0.4rem;
     cursor: pointer;
     transition: all 0.3s;
-    font-family: Avenir, Helvetica, Arial, sans-serif;
     font-weight: 400;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
