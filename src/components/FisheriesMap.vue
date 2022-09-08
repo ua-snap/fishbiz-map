@@ -59,7 +59,9 @@
           combination of filters you have selected. Choose different filters, or
           click the button below to reset all filters and start again.
         </p>
-        <button @click="clearFilters">Clear filters and start again</button>
+        <button class="pure-button" @click="clearFilters">
+          Clear filters and start again
+        </button>
         <div id="map"></div>
       </div>
     </div>

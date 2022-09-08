@@ -29,8 +29,7 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap');
 /* The #app div lives in WordPress, not Vue, so this cannot be scoped. */
 #app {
-  font-family: 'Raleway', sans-serif;
-  .error {
+font-family: 'Raleway', sans-serif;  .error {
     position: relative;
     top: 40%;
     transform: translateY(-40%);

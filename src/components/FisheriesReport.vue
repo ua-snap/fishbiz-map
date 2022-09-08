@@ -57,7 +57,7 @@
 
 <style lang="scss" scoped>
 .report {
-  margin: 0 2rem;
+  margin: 0 2rem 2rem;
   text-align: left;
   max-height: 100%;
   overflow-y: auto;

@@ -13,9 +13,12 @@
 <style lang="scss" scoped>
 // We need to adjust the CSS a little bit so that
 // the combo boxes work properly with WP's styling.
+:deep(*) {
+  font-family: 'Raleway', sans-serif;
+}
 
 // The box/dropbown itself...
-:deep(input[type="search"]) {
+:deep(input[type='search']) {
   &::placeholder {
     color: #000;
   }
@@ -35,7 +38,6 @@
   font-size: 14px;
   color: #000;
 }
-
 </style>
 
 <script>
