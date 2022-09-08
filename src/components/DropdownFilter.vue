@@ -11,13 +11,16 @@
 </template>
 
 <style lang="scss" scoped>
-// Adjustments needed to make the combo box work OK in WP
+// We need to adjust the CSS a little bit so that
+// the combo boxes work properly with WP's styling.
+
+// The box/dropbown itself...
 :deep(input[type="search"]) {
   &::placeholder {
     color: #000;
   }
   &:focus {
-    font-size: 16px;
+    font-size: 14px;
     border-radius: 0;
     color: #000;
   }
@@ -26,6 +29,13 @@
   border: 1px solid transparent;
   width: 0;
 }
+
+// Font fixups for the sub-menus...
+:deep(ul) {
+  font-size: 14px;
+  color: #000;
+}
+
 </style>
 
 <script>
