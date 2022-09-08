@@ -73,6 +73,7 @@
 .filter {
   flex-basis: 20%;
   --vs-search-input-placeholder-color: #757575;
+  font-family: 'Raleway', sans-serif;
   &::placeholder {
     font-size: 14px;
   }
