@@ -9,9 +9,128 @@ function dictifyOptions(options) {
   return dict
 }
 
+function sortAlphabetically(arr) {
+  return arr.sort((a, b) => a.name.localeCompare(b.name))
+}
+
+function removeDuplicates(arr) {
+  let jsonObject = arr.map(JSON.stringify)
+  let uniqueSet = new Set(jsonObject)
+  return sortAlphabetically(Array.from(uniqueSet).map(JSON.parse))
+}
+
+function processRegions(context, results) {
+  let regions = {}
+
+  results.forEach(result => {
+    if (result['fishery_regions']) {
+      result['fishery_regions'].forEach(region => {
+        let name = region['name']
+        let slug = region['slug']
+
+        regions[slug] = {
+          slug: slug,
+          name: name,
+        }
+
+        regions[slug]['lat'] = region['latitude']
+        regions[slug]['lon'] = region['longitude']
+      })
+    }
+  })
+
+  let regionOptions = _.map(regions, region => {
+    return {
+      slug: region['slug'],
+      name: region['name'],
+    }
+  })
+
+  context.commit('setRegions', regions)
+  context.commit('setRegionOptions', sortAlphabetically(regionOptions))
+}
+
+function processAccess(context, results) {
+  let allAccess = []
+  results.forEach(result => {
+    result['fishery_entry_type'].forEach(access => {
+      allAccess.push({
+        slug: access['slug'],
+        name: access['name'],
+      })
+    })
+  })
+  let accessOptions = removeDuplicates(allAccess)
+
+  context.commit('setAccessOptions', accessOptions)
+}
+
+function processSpecies(context, results) {
+  let allSpecies = []
+  results.forEach(result => {
+    result['fishery_species'].forEach(species => {
+      allSpecies.push({
+        slug: species['slug'],
+        name: species['name'],
+      })
+    })
+  })
+  let speciesOptions = removeDuplicates(allSpecies)
+
+  context.commit('setSpeciesOptions', speciesOptions)
+}
+
+function processSeasons(context, results) {
+  let seasonDict = {}
+  results.forEach(result => {
+    result['fishery_seasons'].forEach(season => {
+      seasonDict[season['slug']] = season['name']
+    })
+  })
+
+  context.commit('setSeasonDict', seasonDict)
+}
+
+function processGroups(context, results) {
+  let allGroups = []
+  results.forEach(result => {
+    result['fishery_group'].forEach(group => {
+      allGroups.push({
+        slug: group['slug'],
+        name: group['name'],
+      })
+    })
+  })
+  let groupOptions = removeDuplicates(allGroups)
+
+  context.commit('setGroupOptions', groupOptions)
+}
+
+function processGear(context, results) {
+  let allGear = []
+  results.forEach(result => {
+    result['fishery_gear'].forEach(gear => {
+      allGear.push({
+        slug: gear['slug'],
+        name: gear['name'],
+      })
+    })
+  })
+  let gearOptions = removeDuplicates(allGear)
+
+  context.commit('setGearOptions', gearOptions)
+}
+
 function processFisheries(context, results) {
   let fisheries = []
   let grouped = {}
+
+  processRegions(context, results)
+  processAccess(context, results)
+  processSpecies(context, results)
+  processSeasons(context, results)
+  processGroups(context, results)
+  processGear(context, results)
 
   results.forEach(result => {
     let name = result['title']['rendered']
@@ -272,136 +391,6 @@ export default createStore({
   },
 
   actions: {
-    async fetchRegions(context) {
-      let response = await fetch(
-        process.env.VUE_APP_WORDPRESS_URL + '/wp-json/wp/v2/region?per_page=100'
-      )
-
-      if (response.status != 200) {
-        context.commit('setError')
-      }
-
-      let data = await response.json()
-      let regions = {}
-
-      data.forEach(result => {
-        let name = result['name']
-        let slug = result['slug']
-
-        regions[slug] = {
-          name: name,
-        }
-
-        regions[slug]['lat'] = result['latitude']
-        regions[slug]['lon'] = result['longitude']
-      })
-
-      let regionOptions = _.map(data, result => {
-        return {
-          slug: result['slug'],
-          name: result['name'],
-        }
-      })
-
-      context.commit('setRegions', regions)
-      context.commit('setRegionOptions', regionOptions)
-    },
-    async fetchAccess(context) {
-      let response = await fetch(
-        process.env.VUE_APP_WORDPRESS_URL + '/wp-json/wp/v2/entry?per_page=100'
-      )
-
-      if (response.status != 200) {
-        context.commit('setError')
-      }
-
-      let data = await response.json()
-      let accessOptions = _.map(data, result => {
-        return {
-          slug: result['slug'],
-          name: result['name'],
-        }
-      })
-
-      context.commit('setAccessOptions', accessOptions)
-    },
-    async fetchSpecies(context) {
-      let response = await fetch(
-        process.env.VUE_APP_WORDPRESS_URL +
-          '/wp-json/wp/v2/species?per_page=100'
-      )
-
-      if (response.status != 200) {
-        context.commit('setError')
-      }
-
-      let data = await response.json()
-      let speciesOptions = _.map(data, result => {
-        return {
-          slug: result['slug'],
-          name: result['name'],
-        }
-      })
-
-      context.commit('setSpeciesOptions', speciesOptions)
-    },
-    async fetchGear(context) {
-      let response = await fetch(
-        process.env.VUE_APP_WORDPRESS_URL + '/wp-json/wp/v2/gear?per_page=100'
-      )
-
-      if (response.status != 200) {
-        context.commit('setError')
-      }
-
-      let data = await response.json()
-      let gearOptions = _.map(data, result => {
-        return {
-          slug: result['slug'],
-          name: result['name'],
-        }
-      })
-
-      context.commit('setGearOptions', gearOptions)
-    },
-    async fetchSeasons(context) {
-      let response = await fetch(
-        process.env.VUE_APP_WORDPRESS_URL + '/wp-json/wp/v2/season?per_page=100'
-      )
-
-      if (response.status != 200) {
-        context.commit('setError')
-      }
-
-      let data = await response.json()
-
-      let seasonDict = {}
-      data.forEach(result => {
-        seasonDict[result['slug']] = result['name']
-      })
-
-      context.commit('setSeasonDict', seasonDict)
-    },
-    async fetchGroups(context) {
-      let response = await fetch(
-        process.env.VUE_APP_WORDPRESS_URL +
-          '/wp-json/wp/v2/fish_group?per_page=100'
-      )
-
-      if (response.status != 200) {
-        context.commit('setError')
-      }
-
-      let data = await response.json()
-      let groupOptions = _.map(data, result => {
-        return {
-          slug: result['slug'],
-          name: result['name'],
-        }
-      })
-
-      context.commit('setGroupOptions', groupOptions)
-    },
     async fetchFisheries(context) {
       let pages = _.range(1, 3)
       let urls = _.map(pages, page => {
