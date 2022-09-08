@@ -28,7 +28,7 @@ export default {
 <style lang="scss">
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap');
 /* The #app div lives in WordPress, not Vue, so this cannot be scoped. */
-#app {
+#fishbiz-map {
   font-family: 'Raleway', sans-serif;
   .error {
     position: relative;

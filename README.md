@@ -33,7 +33,7 @@ aws s3 cp dist s3://fishbiz-map/ --acl public-read --recursive
 To incorporate the static files into a WordPress page via Beaver Builder, simply use Beaver Builder's HTML module to create an HTML block on the page where the app should appear. Set the content of the HTML block to:
 
 ```
-<div id="app"></div>
+<div id="fishbiz-map"></div>
 <script defer="defer" src="https://fishbiz-map.s3.us-west-2.amazonaws.com/app.js"></script>
 <script defer="defer" src="https://fishbiz-map.s3.us-west-2.amazonaws.com/chunk-vendors.js"></script>
 <link href="https://fishbiz-map.s3.us-west-2.amazonaws.com/app.css" rel="stylesheet">
@@ -43,5 +43,5 @@ To incorporate the static files into a WordPress page via Beaver Builder, simply
 The height of the app can be changed from its default height by setting inline CSS on the app div, like this:
 
 ```
-<div id="app" style="height: 600px;"></div>
+<div id="fishbiz-map" style="height: 600px;"></div>
 ```
