@@ -10,7 +10,18 @@ function dictifyOptions(options) {
 }
 
 function sortAlphabetically(arr) {
-  return arr.sort((a, b) => a.name.localeCompare(b.name))
+  // If "n/a" or "N/A" option exists, move it to the bottom
+  let na_index = _.findIndex(arr, option => {
+    return option.name.toLowerCase() == 'n/a'
+  })
+  if (na_index != -1) {
+    var na_option = arr.splice(na_index, 1).pop()
+  }
+  let sorted = arr.sort((a, b) => a.name.localeCompare(b.name))
+  if (na_option != undefined) {
+    sorted.push(na_option)
+  }
+  return sorted
 }
 
 function removeDuplicates(arr) {
