@@ -1,6 +1,6 @@
 <template>
   <div class="app-contents">
-    <div class="filters pure-g">
+    <div v-show="!reportIsVisible" class="filters pure-g">
       <div class="pure-u-md-4-24 pure-u-1 filter">
         <input
           type="text"
@@ -47,12 +47,16 @@
         />
       </div>
       <div class="pure-u">
-        <button class="filter pure-button" @click="clearFilters">Reset filters</button>
+        <button class="filter pure-button" @click="clearFilters">
+          Reset filters
+        </button>
       </div>
     </div>
     <div class="map-wrapper">
-      &nbsp;
-      <div v-show="markers == 'startup' || markers.length > 0" id="fishbiz-map--leaflet"></div>
+      <div
+        v-show="markers == 'startup' || markers.length > 0"
+        id="fishbiz-map--leaflet"
+      ></div>
       <div v-show="markers.length === 0" id="noresults">
         <p>
           <strong>There are no matching results</strong> found for the
@@ -82,6 +86,10 @@ input[type='text'].filter {
     color: #000;
   }
 }
+.filters {
+  margin-bottom: 1rem;
+}
+
 .filter {
   margin: 1rem 1rem 0;
 }
@@ -94,6 +102,10 @@ input[type='text'].filter {
 
 #noresults {
   font-size: 1.25rem;
+}
+
+.app-contents {
+  flex-grow: 1;
 }
 </style>
 
@@ -180,6 +192,17 @@ export default {
     markerBounds() {
       this.addMarkers()
     },
+    reportIsVisible() {
+      if (this.reportIsVisible == false) {
+        setTimeout(() => {
+          this.map.invalidateSize()
+          this.map.fitBounds(this.markerBounds)
+        })
+        this.markers.forEach(marker => {
+          marker.setOpacity(1.0)
+        })
+      }
+    },
   },
   methods: {
     addMarkers: function () {
@@ -230,9 +253,11 @@ export default {
               iconUrl: require(`../assets/images/icons/${group}.png`),
               iconSize: [35, 35],
             })
-            let marker = L.marker([lat, lon], { icon: icon })
+            let marker = L.marker([lat, lon], {
+              icon: icon,
+            })
             marker.on('click', () => {
-              this.handleMapClick(region, group)
+              this.handleMapClick(marker, region, group)
             })
             this.markers.push(marker)
           }
@@ -247,10 +272,21 @@ export default {
         this.map.setMinZoom(this.map.getZoom())
       }
     },
-    handleMapClick: function (region, group) {
+    handleMapClick: function (clickedMarker, region, group) {
       this.$store.commit('markerClicked', {
         region: region,
         group: group,
+      })
+      this.markers.forEach(marker => {
+        if (marker._leaflet_id != clickedMarker._leaflet_id) {
+          marker.setOpacity(0.2)
+        } else {
+          marker.setOpacity(1.0)
+        }
+      })
+      setTimeout(() => {
+        this.map.invalidateSize()
+        this.map.setView(clickedMarker.getLatLng())
       })
     },
     textSearch: _.debounce(function () {
