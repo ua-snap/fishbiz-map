@@ -47,7 +47,7 @@
         />
       </div>
       <div class="pure-u">
-        <button class="filter pure-button" @click="clearFilters">Clear</button>
+        <button class="filter pure-button" @click="clearFilters">Reset filters</button>
       </div>
     </div>
     <div class="map-wrapper">
