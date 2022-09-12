@@ -8,4 +8,4 @@ import 'vue-select/dist/vue-select.css'
 const app = createApp(App)
 app.component('v-select', vSelect)
 app.use(store)
-app.mount('#app')
+app.mount('#fishbiz-map')
