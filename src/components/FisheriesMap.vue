@@ -1,7 +1,7 @@
 <template>
   <div class="app-contents">
     <div class="filters pure-g">
-      <div class="pure-u-4-24 filter">
+      <div class="pure-u-md-4-24 pure-u-1 filter">
         <input
           type="text"
           class="filter"
@@ -10,7 +10,7 @@
           v-model="enteredString"
         />
       </div>
-      <div class="pure-u-4-24">
+      <div class="pure-u-md-4-24 pure-u-1">
         <DropdownFilter
           class="filter"
           placeholder="Region"
@@ -19,7 +19,7 @@
           :value="region"
         />
       </div>
-      <div class="pure-u-4-24">
+      <div class="pure-u-md-4-24 pure-u-1">
         <DropdownFilter
           class="filter"
           placeholder="Access"
@@ -28,7 +28,7 @@
           :value="access"
         />
       </div>
-      <div class="pure-u-4-24">
+      <div class="pure-u-md-4-24 pure-u-1">
         <DropdownFilter
           class="filter"
           placeholder="Species"
@@ -37,7 +37,7 @@
           :value="species"
         />
       </div>
-      <div class="pure-u-4-24">
+      <div class="pure-u-md-4-24 pure-u-1">
         <DropdownFilter
           class="filter"
           placeholder="Gear"
@@ -47,7 +47,7 @@
         />
       </div>
       <div class="pure-u">
-        <button class="filter pure-button" @click="clearFilters">Clear</button>
+        <button class="filter pure-button" @click="clearFilters">Reset filters</button>
       </div>
     </div>
     <div class="map-wrapper">
@@ -71,11 +71,13 @@
 <style lang="scss" scoped>
 input[type='text'].filter {
   width: 100%;
+  box-sizing: border-box;
   margin: 0;
   font-size: 110%;
-  padding: 4px;
+  padding: 4px 8px;
   position: relative;
   top: 1px;
+  font-family: 'Raleway', sans-serif;
 
   &::placeholder {
     color: #000;
@@ -88,6 +90,7 @@ input[type='text'].filter {
 #map {
   min-height: 150px;
   height: 75vh;
+  z-index: 500;
 }
 
 #noresults {

@@ -6,6 +6,7 @@
 
 <script>
 import 'purecss/build/pure.css'
+import 'purecss/build/grids-responsive.css'
 import FisheriesMap from './components/FisheriesMap.vue'
 import FisheriesReport from './components/FisheriesReport.vue'
 import { mapGetters } from 'vuex'
