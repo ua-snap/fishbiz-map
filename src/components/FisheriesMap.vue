@@ -53,7 +53,6 @@
       </div>
     </div>
     <div class="map-wrapper">
-      &nbsp;
       <div
         v-show="markers == 'startup' || markers.length > 0"
         id="fishbiz-map--leaflet"
@@ -87,6 +86,10 @@ input[type='text'].filter {
     color: #000;
   }
 }
+.filters {
+  margin-bottom: 1rem;
+}
+
 .filter {
   margin: 1rem 1rem 0;
 }
@@ -193,6 +196,7 @@ export default {
       if (this.reportIsVisible == false) {
         setTimeout(() => {
           this.map.invalidateSize()
+          this.map.fitBounds(this.markerBounds)
         })
         this.markers.forEach(marker => {
           marker.setOpacity(1.0)
@@ -282,6 +286,7 @@ export default {
       })
       setTimeout(() => {
         this.map.invalidateSize()
+        this.map.setView(clickedMarker.getLatLng())
       })
     },
     textSearch: _.debounce(function () {
