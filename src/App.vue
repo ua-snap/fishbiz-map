@@ -1,5 +1,5 @@
 <template>
-  <FisheriesMap v-show="!this.reportIsVisible && !this.error" />
+  <FisheriesMap v-show="!this.error" />
   <FisheriesReport v-if="this.reportIsVisible && !this.error" />
   <div v-if="this.error" class="error">Failed to load fisheries map.</div>
 </template>
@@ -31,6 +31,9 @@ export default {
 /* The #app div lives in WordPress, not Vue, so this cannot be scoped. */
 #fishbiz-map {
   font-family: 'Raleway', sans-serif;
+  @media (min-width: 1000px) {
+    display: flex;
+  }
   .error {
     position: relative;
     top: 40%;
