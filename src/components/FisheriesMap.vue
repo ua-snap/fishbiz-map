@@ -52,7 +52,7 @@
     </div>
     <div class="map-wrapper">
       &nbsp;
-      <div v-show="markers == 'startup' || markers.length > 0" id="map"></div>
+      <div v-show="markers == 'startup' || markers.length > 0" id="fishbiz-map--leaflet"></div>
       <div v-show="markers.length === 0" id="noresults">
         <p>
           <strong>There are no matching results</strong> found for the
@@ -62,7 +62,6 @@
         <button class="pure-button" @click="clearFilters">
           Clear filters and start again
         </button>
-        <div id="map"></div>
       </div>
     </div>
   </div>
@@ -85,7 +84,7 @@ input[type='text'].filter {
   margin: 1rem 1rem 0;
 }
 
-#map {
+#fishbiz-map--leaflet {
   min-height: 150px;
   height: 75vh;
 }
@@ -144,7 +143,7 @@ export default {
         baseLayer: true,
       }
     )
-    this.map = L.map('map', {
+    this.map = L.map('fishbiz-map--leaflet', {
       minZoom: 4,
       maxZoom: 8,
       zoomSnap: 0.1,
