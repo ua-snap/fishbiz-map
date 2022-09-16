@@ -80,18 +80,19 @@ input[type='text'].filter {
   padding: 4px 8px;
   position: relative;
   top: 1px;
-  font-family: 'Raleway', sans-serif;
 
   &::placeholder {
     color: #000;
   }
 }
+
 .filters {
   margin-bottom: 1rem;
 }
 
 .filter {
   margin: 1rem 1rem 0;
+  font-family: 'Raleway', sans-serif;
 }
 
 #fishbiz-map--leaflet {
@@ -101,7 +102,10 @@ input[type='text'].filter {
 }
 
 #noresults {
-  font-size: 1.25rem;
+  padding: 1.5rem;
+  margin: 1.5rem auto;
+  max-width: 768px;
+  font-size: calc(14px + 0.3rem);
 }
 
 .app-contents {
