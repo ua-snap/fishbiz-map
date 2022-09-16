@@ -5,7 +5,7 @@
         <input
           type="text"
           class="filter"
-          placeholder="Search"
+          placeholder="Search fisheries&hellip;"
           @input="textSearch"
           v-model="enteredString"
         />
