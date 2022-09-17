@@ -224,7 +224,7 @@ export default createStore({
     groupedFisheries(state) {
       return state.groupedFisheries
     },
-    filteredFisheries(state) {
+    filteredFisheries(state, getters) {
       let filterKeys = ['region', 'access', 'species', 'gear']
       let filtered = _.cloneDeep(state.groupedFisheries)
 
@@ -254,6 +254,25 @@ export default createStore({
         filtered = _.cloneDeep(newFiltered)
       })
 
+      let textSearchKeys = [
+        'name',
+        'code',
+        'region',
+        'access',
+        'species',
+        'gear',
+        'seasons',
+      ]
+
+      // Use these to perform text search on human readable strings, not slugs
+      let dictLookups = {
+        region: getters.regionDict,
+        access: getters.accessDict,
+        species: getters.speciesDict,
+        gear: getters.gearDict,
+        seasons: getters.seasonDict,
+      }
+
       // Perform text search if a search string was entered
       if (state.searchString != undefined) {
         newFiltered = {}
@@ -264,8 +283,21 @@ export default createStore({
               filtered[region][group],
               fishery => {
                 let searchableText = ''
-                filterKeys.forEach(filterKey => {
-                  searchableText += fishery[filterKey]
+                textSearchKeys.forEach(textSearchKey => {
+                  let fieldValue = fishery[textSearchKey]
+                  // If taxonomy slug(s), translate into human readable
+                  // string(s), otherwise use string as-is.
+                  if (_.isArray(fieldValue)) {
+                    searchableText += _.map(fieldValue, slug => {
+                      return dictLookups[textSearchKey][slug]
+                    }).join()
+                  } else {
+                    if (_.has(dictLookups, textSearchKey)) {
+                      searchableText += dictLookups[textSearchKey][fieldValue]
+                    } else {
+                      searchableText += fieldValue
+                    }
+                  }
                 })
                 searchableText = searchableText.toLowerCase()
                 let searchString = state.searchString.toLowerCase()
