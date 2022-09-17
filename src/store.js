@@ -254,29 +254,28 @@ export default createStore({
         filtered = _.cloneDeep(newFiltered)
       })
 
-      let textSearchKeys = [
-        'name',
-        'code',
-        'region',
-        'access',
-        'species',
-        'gear',
-        'seasons',
-      ]
-
-      // Use these to perform text search on human readable strings, not slugs
-      let dictLookups = {
-        region: getters.regionDict,
-        access: getters.accessDict,
-        species: getters.speciesDict,
-        gear: getters.gearDict,
-        seasons: getters.seasonDict,
-      }
-
       // Perform text search if a search string was entered
       if (state.searchString != undefined) {
         let searchString = state.searchString.toLowerCase()
-        newFiltered = {}
+
+        let textSearchKeys = [
+          'name',
+          'code',
+          'region',
+          'access',
+          'species',
+          'gear',
+          'seasons',
+        ]
+
+        // Use these to perform text search on human readable strings, not slugs
+        let dictLookups = {
+          region: getters.regionDict,
+          access: getters.accessDict,
+          species: getters.speciesDict,
+          gear: getters.gearDict,
+          seasons: getters.seasonDict,
+        }
 
         // If the provided search string matches one and only one region, save
         // this region for later to prevent fisheries belonging to multiple
@@ -292,6 +291,7 @@ export default createStore({
           matchedRegion = matchedRegions[0]
         }
 
+        newFiltered = {}
         Object.keys(filtered).forEach(region => {
           newFiltered[region] = {}
           Object.keys(filtered[region]).forEach(group => {
