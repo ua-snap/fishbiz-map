@@ -275,7 +275,23 @@ export default createStore({
 
       // Perform text search if a search string was entered
       if (state.searchString != undefined) {
+        let searchString = state.searchString.toLowerCase()
         newFiltered = {}
+
+        // If the provided search string matches one and only one region, save
+        // this region for later to prevent fisheries belonging to multiple
+        // regions from showing up more than once on the map
+        let matchedRegion = null
+        let regions = Object.keys(filtered)
+        let matchedRegions = _.filter(regions, slug => {
+          let humanReadable = dictLookups['region'][slug]
+          humanReadable = humanReadable.toLowerCase()
+          return humanReadable.indexOf(searchString) != -1
+        })
+        if (matchedRegions.length == 1) {
+          matchedRegion = matchedRegions[0]
+        }
+
         Object.keys(filtered).forEach(region => {
           newFiltered[region] = {}
           Object.keys(filtered[region]).forEach(group => {
@@ -284,6 +300,13 @@ export default createStore({
               fishery => {
                 let searchableText = ''
                 textSearchKeys.forEach(textSearchKey => {
+                  if (
+                    matchedRegion != null &&
+                    textSearchKey == 'region' &&
+                    matchedRegion != region
+                  ) {
+                    return false
+                  }
                   let fieldValue = fishery[textSearchKey]
                   // If taxonomy slug(s), translate into human readable
                   // string(s), otherwise use string as-is.
@@ -300,7 +323,6 @@ export default createStore({
                   }
                 })
                 searchableText = searchableText.toLowerCase()
-                let searchString = state.searchString.toLowerCase()
                 return searchableText.indexOf(searchString) != -1
               }
             )
