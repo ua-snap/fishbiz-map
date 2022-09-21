@@ -241,9 +241,13 @@ export default createStore({
                   [undefined, null, 'all'],
                   state[filterKey]
                 )
-                let filterMatched =
-                  region == state[filterKey] &&
-                  _.includes(fishery[filterKey], state[filterKey])
+                let filterMatched = _.includes(
+                  fishery[filterKey],
+                  state[filterKey]
+                )
+                if (filterKey == 'region' && region != state[filterKey]) {
+                  filterMatched = false
+                }
                 if (filterNotSet || filterMatched) {
                   return true
                 }
