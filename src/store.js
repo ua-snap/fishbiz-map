@@ -224,7 +224,7 @@ export default createStore({
     groupedFisheries(state) {
       return state.groupedFisheries
     },
-    filteredFisheries(state) {
+    filteredFisheries(state, getters) {
       let filterKeys = ['region', 'access', 'species', 'gear']
       let filtered = _.cloneDeep(state.groupedFisheries)
 
@@ -260,6 +260,41 @@ export default createStore({
 
       // Perform text search if a search string was entered
       if (state.searchString != undefined) {
+        let searchString = state.searchString.toLowerCase()
+
+        let textSearchKeys = [
+          'name',
+          'code',
+          'region',
+          'access',
+          'species',
+          'gear',
+          'seasons',
+        ]
+
+        // Use these to perform text search on human readable strings, not slugs
+        let dictLookups = {
+          region: getters.regionDict,
+          access: getters.accessDict,
+          species: getters.speciesDict,
+          gear: getters.gearDict,
+          seasons: getters.seasonDict,
+        }
+
+        // If the provided search string matches one and only one region, save
+        // this region for later to prevent fisheries belonging to multiple
+        // regions from showing up more than once on the map
+        let matchedRegion = null
+        let regions = Object.keys(filtered)
+        let matchedRegions = _.filter(regions, slug => {
+          let humanReadable = dictLookups['region'][slug]
+          humanReadable = humanReadable.toLowerCase()
+          return humanReadable.indexOf(searchString) != -1
+        })
+        if (matchedRegions.length == 1) {
+          matchedRegion = matchedRegions[0]
+        }
+
         newFiltered = {}
         Object.keys(filtered).forEach(region => {
           newFiltered[region] = {}
@@ -268,11 +303,30 @@ export default createStore({
               filtered[region][group],
               fishery => {
                 let searchableText = ''
-                filterKeys.forEach(filterKey => {
-                  searchableText += fishery[filterKey]
+                textSearchKeys.forEach(textSearchKey => {
+                  if (
+                    matchedRegion != null &&
+                    textSearchKey == 'region' &&
+                    matchedRegion != region
+                  ) {
+                    return false
+                  }
+                  let fieldValue = fishery[textSearchKey]
+                  // If taxonomy slug(s), translate into human readable
+                  // string(s), otherwise use string as-is.
+                  if (_.isArray(fieldValue)) {
+                    searchableText += _.map(fieldValue, slug => {
+                      return dictLookups[textSearchKey][slug]
+                    }).join()
+                  } else {
+                    if (_.has(dictLookups, textSearchKey)) {
+                      searchableText += dictLookups[textSearchKey][fieldValue]
+                    } else {
+                      searchableText += fieldValue
+                    }
+                  }
                 })
                 searchableText = searchableText.toLowerCase()
-                let searchString = state.searchString.toLowerCase()
                 return searchableText.indexOf(searchString) != -1
               }
             )
