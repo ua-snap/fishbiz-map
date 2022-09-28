@@ -2,6 +2,7 @@
   <div class="report">
     <h1>{{ groupDict[selectedGroup] }} in {{ regionDict[selectedRegion] }}</h1>
     <BackButton />
+    <p>The following species are listed below: {{ speciesSummary() }}</p>
     <div id="report" v-if="filteredFisheries[selectedRegion] != undefined">
       <div v-for="fishery in orderedResults()" :key="fishery">
         <h3 v-html="fishery['name']"></h3>
@@ -111,6 +112,16 @@ export default {
         this.filteredFisheries[this.selectedRegion][this.selectedGroup],
         'name'
       )
+    },
+    speciesSummary: function () {
+      let species = _.map(
+        this.filteredFisheries[this.selectedRegion][this.selectedGroup],
+        fishery => {
+          let slug = fishery['species']
+          return this.speciesDict[slug]
+        }
+      )
+      return _.uniq(species).sort().join(', ')
     },
   },
 }
