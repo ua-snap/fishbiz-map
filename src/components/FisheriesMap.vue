@@ -1,5 +1,8 @@
 <template>
   <div class="app-contents">
+    <div v-show="!reportIsVisible" class="filter-label-bar">
+      &#8595;&nbsp;&nbsp;Fishery drop-down menus&nbsp;&nbsp;&#8595;
+    </div>
     <div v-show="!reportIsVisible" class="filters pure-g">
       <div class="pure-u-md-4-24 pure-u-1 filter">
         <input
@@ -72,6 +75,14 @@
 </template>
 
 <style lang="scss" scoped>
+.filter-label-bar {
+  font-size: 1.25rem;
+  text-align: center;
+  color: #425064;
+  background-color: #d5ebff;
+  padding: 10px;
+}
+
 input[type='text'].filter {
   width: 100%;
   box-sizing: border-box;
