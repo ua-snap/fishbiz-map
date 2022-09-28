@@ -209,6 +209,62 @@ export default {
     },
   },
   methods: {
+    clusterOffsets: function (populatedGroups) {
+      let spread = 1.5
+
+      // Sort group list to ensure marker placeemnt is deterministic.
+      populatedGroups.sort()
+
+      // If finfish group is present, move it to the end of the sorted array to
+      // make sure it is placed in the center of the cluster when applicable.
+      let finfishIndex = populatedGroups.indexOf('finfish')
+      populatedGroups.push(populatedGroups.splice(finfishIndex, 1)[0])
+
+      let offsetShapes = [
+        // Single marker
+        [{ lat: 0, lon: 0 }],
+        // Two marker row
+        [
+          { lat: 0, lon: -(spread / 2) },
+          { lat: 0, lon: spread / 2 },
+        ],
+        // Three marker triangle
+        [
+          { lat: -(spread / 3), lon: -(spread / 1.75) },
+          { lat: -(spread / 3), lon: spread / 1.75 },
+          { lat: spread / 1.5, lon: 0 },
+        ],
+        // Four marker square
+        [
+          { lat: -(spread / 1.75), lon: -(spread / 1.75) },
+          { lat: -(spread / 1.75), lon: spread / 1.75 },
+          { lat: spread / 1.75, lon: -(spread / 1.75) },
+          { lat: spread / 1.75, lon: spread / 1.75 },
+        ],
+        // Five marker cross
+        [
+          { lat: 0, lon: -spread },
+          { lat: 0, lon: spread },
+          { lat: -spread, lon: 0 },
+          { lat: spread, lon: 0 },
+          { lat: 0, lon: 0 },
+        ],
+      ]
+
+      let markerCount = populatedGroups.length
+      let offsetShape = offsetShapes[markerCount - 1]
+      let offsets = {}
+      for (let i = 0; i < markerCount; i++) {
+        let slug = populatedGroups[i]
+        offsets[slug] = offsetShape[i]
+        if (slug == 'finfish') {
+          offsets[slug]['zIndexOffset'] = 100
+        } else {
+          offsets[slug]['zIndexOffset'] = 1
+        }
+      }
+      return offsets
+    },
     addMarkers: function () {
       // Slightly unusual way to do this to get around a "listener not found"
       // console log bug when removing the entire featureGroup at once.
@@ -223,14 +279,6 @@ export default {
       }
 
       this.markers = []
-      let spread = 1.5
-      let jitterOffsets = {
-        finfish: { lat: 0, lon: 0 },
-        'ground-fish': { lat: 0, lon: spread },
-        crab: { lat: spread, lon: 0 },
-        shrimp: { lat: 0, lon: -spread },
-        'other-species': { lat: -spread, lon: 0 },
-      }
 
       Object.keys(this.filteredFisheries).forEach(region => {
         let regionLat = parseFloat(this.regions[region]['lat'])
@@ -240,16 +288,24 @@ export default {
           regionLon -= 360
         }
 
-        Object.keys(this.filteredFisheries[region]).forEach(group => {
+        let regionGroups = Object.keys(this.filteredFisheries[region])
+
+        let populatedGroups = _.filter(regionGroups, group => {
+          return this.filteredFisheries[region][group].length > 0
+        })
+
+        let offsets = this.clusterOffsets(populatedGroups)
+
+        regionGroups.forEach(group => {
           if (this.filteredFisheries[region][group].length > 0) {
             // The weird math here is to deal with more northern latitudes being
             // slightly further apart. Marker icons appear equally offset from each
             // other using the math below.
             let latJitter =
               (65 / (Math.pow(regionLat, 1.475) * 1.5)) *
-              jitterOffsets[group]['lat'] *
+              offsets[group]['lat'] *
               5
-            let lonJitter = jitterOffsets[group]['lon']
+            let lonJitter = offsets[group]['lon']
 
             let lat = regionLat + latJitter
             let lon = regionLon + lonJitter
@@ -259,6 +315,7 @@ export default {
             })
             let marker = L.marker([lat, lon], {
               icon: icon,
+              zIndexOffset: offsets[group]['zIndexOffset'],
             })
             marker.on('click', () => {
               this.handleMapClick(marker, region, group)
