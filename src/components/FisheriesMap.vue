@@ -76,7 +76,7 @@
 
 <style lang="scss" scoped>
 .filter-label-bar {
-  font-size: 1.25rem;
+  font-size: 1.75rem;
   text-align: center;
   color: #425064;
   background-color: #d5ebff;
