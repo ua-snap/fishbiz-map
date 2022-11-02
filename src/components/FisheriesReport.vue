@@ -1,6 +1,11 @@
 <template>
   <div class="report">
     <h1>{{ groupDict[selectedGroup] }} in {{ regionDict[selectedRegion] }}</h1>
+    <p
+      class="subtitle"
+      v-if="subtitle(selectedGroup)"
+      v-html="subtitle(selectedGroup)"
+    />
     <BackButton />
     <div id="report" v-if="filteredFisheries[selectedRegion] != undefined">
       <div v-for="fishery in orderedResults()" :key="fishery">
@@ -70,6 +75,9 @@
   h3 {
     font-family: 'Raleway', sans-serif;
   }
+  .subtitle {
+    margin-bottom: 1.5rem;
+  }
   table {
     margin: -0.5rem 0 2rem;
   }
@@ -88,6 +96,7 @@ export default {
   },
   computed: {
     ...mapGetters({
+      groupSubtitles: 'groupSubtitles',
       filteredFisheries: 'filteredFisheries',
       selectedRegion: 'selectedRegion',
       selectedGroup: 'selectedGroup',
@@ -102,6 +111,11 @@ export default {
   methods: {
     goBack: function () {
       this.$store.commit('closeReport')
+    },
+    subtitle: function (group) {
+      if (_.has(this.groupSubtitles, group)) {
+        return this.groupSubtitles[group]
+      }
     },
     joined: function (array, dict) {
       return _.map(array, key => dict[key]).join(', ')
