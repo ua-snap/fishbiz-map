@@ -215,6 +215,17 @@ export default createStore({
   },
 
   getters: {
+    groupSubtitles() {
+      return {
+        crab: 'The crab category includes dungeness, king, tanner, and other crab.',
+        finfish:
+          'The finfish category includes herring, salmon, and other freshwater finfish.',
+        'ground-fish':
+          'The groundfish category includes halibut, Pacific cod, pollock, rockfish, and sablefish.',
+        'other-species':
+          'The other species category includes clams, geoducks, octopuses, scallops, sea urchins, snails, and squid.',
+      }
+    },
     regions(state) {
       return state.regions
     },
