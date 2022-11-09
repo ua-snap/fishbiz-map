@@ -351,7 +351,7 @@ export default {
       })
       this.markers.forEach(marker => {
         if (marker._leaflet_id != clickedMarker._leaflet_id) {
-          marker.setOpacity(0.2)
+          marker.setOpacity(0.5)
         } else {
           marker.setOpacity(1.0)
         }
